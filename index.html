@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">কোর্স প্ল্যাটফর্ম</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase App and Database SDKs (v9 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        /* Prevents accidental horizontal scrolling on small viewports */
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar hide for bot questions */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Premium custom outline styling for active touch elements */
+        .touch-none {
+            touch-action: none;
+        }
+
+        /* Smooth origin-right transition for perfect search icon animation */
+        #search-overlay {
+            transform-origin: right center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        /* --- PREMIUM MOTION GRAPHICS GREEN THEME --- */
+        :root {
+            --primary-neon: #00ff88;
+            --primary-green: #10b981;
+            --primary-deep: #059669;
+            --primary-glow: rgba(16, 185, 129, 0.45);
+        }
+
+        .premium-glow {
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+
+        .premium-btn-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-btn-gradient:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%) !important;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Active selection styling */
+        ::selection {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+
+        /* --- PREMIUM DYNAMIC DARK MODE STYLING --- */
+        html.dark,
+        html.dark body {
+            background-color: #0f172a; /* slate-900 */
+            color: #f1f5f9; /* slate-100 */
+        }
+        html.dark header,
+        html.dark footer,
+        html.dark .bottom-nav,
+        html.dark .bg-white,
+        html.dark #rules-modal > div,
+        html.dark #enroll-modal > div,
+        html.dark #chatbot-modal > div,
+        html.dark .course-card-item {
+            background-color: #1e293b !important; /* slate-800 */
+            color: #f1f5f9 !important;
+            border-color: #334155 !important; /* slate-700 */
+        }
+        html.dark .text-slate-900,
+        html.dark .text-slate-800,
+        html.dark .text-gray-900,
+        html.dark h2,
+        html.dark h3,
+        html.dark h4,
+        html.dark .course-card-item h3 {
+            color: #f8fafc !important;
+        }
+        html.dark .text-slate-700,
+        html.dark .text-slate-600,
+        html.dark .text-xs.text-slate-500,
+        html.dark label,
+        html.dark .course-card-item p {
+            color: #cbd5e1 !important; /* slate-300 */
+        }
+        html.dark input,
+        html.dark select,
+        html.dark textarea {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+        }
+        html.dark select option {
+            background-color: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        html.dark input::placeholder {
+            color: #64748b !important;
+        }
+        html.dark .bg-slate-50 {
+            background-color: #0f172a !important;
+        }
+        html.dark .border-slate-100 {
+            border-color: #334155 !important;
+        }
+        
+        /* Highlight/Emergency elements strictly Red (লাল) */
+        html.dark .bg-red-50\/65,
+        html.dark .bg-red-50 {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            color: #fca5a5 !important;
+            border-color: rgba(239, 68, 68, 0.25) !important;
+        }
+        html.dark .bg-red-50\/65 *,
+        html.dark .bg-red-50 * {
+            color: #fca5a5 !important;
+        }
+        
+        /* Containers style adjustments inside Modals (Emerald Premium Green) */
+        html.dark .bg-emerald-50\/70,
+        html.dark .bg-emerald-50 {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: #e2e8f0 !important;
+            border-color: rgba(16, 185, 129, 0.25) !important;
+        }
+        html.dark .bg-emerald-50\/70 * {
+            color: #e2e8f0 !important;
+        }
+        html.dark .bg-emerald-50\/70 .text-emerald-700 {
+            color: #34d399 !important;
+        }
+        html.dark .bg-slate-50\/75 {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        
+        /* Chat Box & Bot Messages Bubble Fixes */
+        html.dark #chat-box {
+            background-color: #0f172a !important;
+        }
+        html.dark #chatbot-modal .bg-white,
+        html.dark #chat-box .bg-white {
+            background-color: #1e293b !important;
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+        }
+        html.dark #chatbot-modal .text-slate-800,
+        html.dark #chat-box .text-slate-800 {
+            color: #f1f5f9 !important;
+        }
+        
+        /* Contact Information Page Cards */
+        html.dark .bg-emerald-50 {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: #34d399 !important;
+        }
+        html.dark .bg-sky-50 {
+            background-color: rgba(14, 165, 233, 0.1) !important;
+            color: #38bdf8 !important;
+        }
+        html.dark a.text-slate-600 {
+            color: #cbd5e1 !important;
+        }
+        html.dark a.text-slate-600:hover {
+            color: #34d399 !important;
+        }
+        
+        /* Bottom Navigation Bar Dark Mode */
+        html.dark .bottom-nav {
+            background-color: rgba(30, 41, 59, 0.95) !important;
+            border-color: #334155 !important;
+        }
+        html.dark .bottom-nav button {
+            color: #94a3b8 !important;
+        }
+        html.dark .bottom-nav button.text-emerald-500 {
+            color: #00ff88 !important;
+            filter: drop-shadow(0 0 8px rgba(0,255,136,0.3));
+        }
+
+        /* Search Overlay Dark Mode */
+        html.dark #search-overlay {
+            background-color: rgba(15, 23, 42, 0.98) !important;
+        }
+        html.dark #search-overlay input {
+            background-color: transparent !important;
+            color: #f8fafc !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans flex flex-col min-h-screen selection:bg-emerald-500 selection:text-white pb-24 transition-colors duration-200">
+
+    <!-- Header / Navbar -->
+    <header id="header-section" class="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-sm sticky top-0 z-40 transition-all border-b border-slate-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative overflow-hidden">
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo" class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover ring-4 ring-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                <span id="site-name" class="text-lg md:text-xl font-black bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-sm">লোড হচ্ছে...</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <!-- Search Icon Button -->
+                <button onclick="toggleSearch(true)" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 p-2 text-xl transition-all duration-150 focus:outline-none flex items-center justify-center" title="অনুসন্ধান">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <!-- Red Rules Info Button (Highlighted strictly in Red) -->
+                <button onclick="openRulesModal()" class="text-red-500 hover:text-red-600 p-2 text-2xl transition-all duration-150 hover:scale-110 active:scale-95 focus:outline-none flex items-center justify-center" title="জরুরী নিয়মাবলী">
+                    <i class="fa-solid fa-circle-info animate-pulse"></i>
+                </button>
+            </div>
+
+            <!-- PREMIUM HORIZONTAL EXPANSION SEARCH BAR -->
+            <div id="search-overlay" class="absolute inset-x-0 top-0 bottom-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 flex items-center justify-between gap-3 transform scale-x-0 origin-right opacity-0 pointer-events-none z-50">
+                <div class="flex items-center gap-3 flex-grow max-w-3xl mx-auto bg-slate-100 dark:bg-slate-800/80 px-4 py-2 rounded-full border border-transparent focus-within:border-emerald-500/30 focus-within:bg-white dark:focus-within:bg-slate-950 transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                    <input type="text" id="search-input" oninput="filterCourses(this.value)" placeholder="কোর্স খুঁজুন..." class="w-full bg-transparent focus:outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400">
+                    <button onclick="clearSearch()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex items-center justify-center">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+                <button onclick="toggleSearch(false)" class="text-xs font-bold text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-colors py-2 px-1 focus:outline-none flex items-center gap-1">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                    <span data-translate="cancel_search">বন্ধ করুন</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SPA VIEW: HOME PAGE -->
+    <div id="view-home" class="spa-view block">
+        <!-- Hero / Bio Section -->
+        <section id="hero-section" class="bg-gradient-to-b from-slate-950 via-[#0a231a] to-slate-950 text-white py-12 px-4 text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_50%)]"></div>
+            <div class="max-w-3xl mx-auto relative z-10 space-y-3">
+                <h1 class="text-2xl md:text-4xl font-extrabold mb-2 tracking-tight leading-tight" id="hero-title" data-translate="welcome_title">স্বাগতম আমাদের প্ল্যাটফর্মে</h1>
+                <p class="text-emerald-300/90 text-xs md:text-sm max-w-xl mx-auto font-light" id="site-bio" data-translate="welcome_bio">আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।</p>
+            </div>
+        </section>
+
+        <!-- Home Content (All Courses) -->
+        <main class="max-w-7xl mx-auto px-4 py-12 w-full">
+            <div class="mb-16">
+                <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
+                    <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-graduation-cap"></i></span> 
+                    <span data-translate="available_courses">উপলব্ধ কোর্সসমূহ</span>
+                </h2>
+                <div id="courses-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="courses_loading">কোর্স লোড হচ্ছে...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SPA VIEW: TRENDING COURSES PAGE -->
+    <div id="view-trending" class="spa-view hidden">
+        <main class="max-w-7xl mx-auto px-4 py-12 w-full">
+            <div class="mb-16">
+                <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
+                    <span class="p-2 bg-amber-500/10 rounded-lg text-amber-500"><i class="fa-solid fa-fire animate-pulse"></i></span> 
+                    <span data-translate="trending_courses">আজকের ট্রেন্ডিং কোর্সসমূহ</span>
+                </h2>
+                <div id="trending-courses-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="no_trending">বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SPA VIEW: ADMIN CONTACT PAGE -->
+    <div id="view-admin-contact" class="spa-view hidden">
+        <main class="max-w-7xl mx-auto px-4 py-12 w-full">
+            <div class="mb-16">
+                <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
+                    <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-user-tie"></i></span> 
+                    <span data-translate="admin_contact">এডমিন কন্টাক্ট ইনফো</span>
+                </h2>
+                <div id="admin-info-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="loading">লোড হচ্ছে...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SPA VIEW: SETTINGS PAGE -->
+    <div id="view-settings" class="spa-view hidden">
+        <main class="max-w-2xl mx-auto px-4 py-12 w-full">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-8">
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 border-b pb-3 flex items-center gap-3">
+                    <span class="p-2 bg-slate-100 rounded-lg text-slate-600"><i class="fa-solid fa-gears"></i></span> 
+                    <span data-translate="settings">সেটিংস (Settings)</span>
+                </h2>
+
+                <!-- Theme Toggle -->
+                <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
+                    <div class="space-y-0.5">
+                        <h3 class="font-bold text-sm text-slate-900" data-translate="theme_mode">থিম মোড (Theme Mode)</h3>
+                        <p class="text-xs text-slate-500" data-translate="theme_desc">ডার্ক বা লাইট মোড পরিবর্তন করুন</p>
+                    </div>
+                    <button onclick="toggleTheme()" class="premium-btn-gradient text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                        <span id="theme-btn-text" data-translate="theme_toggle_btn">ডার্ক মোড</span>
+                    </button>
+                </div>
+
+                <!-- Language Toggle -->
+                <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
+                    <div class="space-y-0.5">
+                        <h3 class="font-bold text-sm text-slate-900" data-translate="lang_mode">ভাষা পরিবর্তন (Language)</h3>
+                        <p class="text-xs text-slate-500" data-translate="lang_desc">ভাষা বাংলা বা ইংরেজি করুন</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="switchLanguage('bn')" id="lang-bn" class="premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent">বাংলা</button>
+                        <button onclick="switchLanguage('en')" id="lang-en" class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent">English</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Rules Modal -->
+    <div id="rules-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative border border-slate-100 transform transition-all">
+            <button onclick="closeRulesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl p-1">&times;</button>
+            <div class="flex items-center gap-3 mb-4 border-b pb-3">
+                <span class="p-2 bg-red-50 rounded-lg text-red-500"><i class="fa-solid fa-circle-info text-xl"></i></span>
+                <h3 class="text-lg font-black text-slate-900 text-red-600" data-translate="rules_title">জরুরী নিয়মাবলী</h3>
+            </div>
+            <div class="text-slate-600 text-sm leading-relaxed max-h-[60vh] overflow-y-auto whitespace-pre-wrap font-bold" id="site-rules">
+                নিয়মাবলী লোড হচ্ছে...
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment / Buy Modal -->
+    <div id="enroll-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-5 md:p-6 relative my-auto border border-slate-100 flex flex-col max-h-[96vh] md:max-h-[90vh]">
+            <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition p-1" aria-label="Close modal">&times;</button>
+            
+            <div class="border-b border-slate-100 pb-4 pr-6">
+                <h3 class="text-lg md:text-xl font-black text-slate-900" id="modal-course-name">কোর্স সাইন আপ</h3>
+            </div>
+            
+            <form id="enroll-form" onsubmit="submitEnrollment(event)" class="overflow-y-auto pr-1 flex-grow space-y-6 mt-4">
+                <input type="hidden" id="enroll-course-id">
+                <input type="hidden" id="enroll-course-title">
+                
+                <!-- Step 1: User Info -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">১</span>
+                        <span data-translate="personal_info">আপনার ব্যক্তিগত তথ্য প্রদান করুন</span>
+                    </h4>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="full_name">আপনার সম্পূর্ণ নাম <span class="text-red-500">*</span></label>
+                        <input type="text" id="user-name" required placeholder="উদাহরণ: মো: আব্দুল্লাহ আল মামুন" class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="whatsapp_no">সক্রিয় হোয়াটসঅ্যাপ নম্বর <span class="text-red-500">*</span></label>
+                            <input type="tel" id="user-whatsapp" placeholder="017XXXXXXXX" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="email_addr">সক্রিয় ইমেইল অ্যাড্রেস <span class="text-red-500">*</span></label>
+                            <input type="email" id="user-email" placeholder="example@email.com" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="address">বর্তমান ঠিকানা (সংক্ষিপ্ত) <span class="text-red-500">*</span></label>
+                        <input type="text" id="user-address" placeholder="গ্রাম/রোড, থানা, জেলা" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="age">আপনার বয়স (বছর) <span class="text-red-500">*</span></label>
+                            <input type="number" id="user-age" min="5" max="100" placeholder="যেমন: ২২" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="experience">অনলাইনে কাজের অভিজ্ঞতা (বছর) <span class="text-red-500">*</span></label>
+                            <input type="number" id="user-exp" min="0" max="50" placeholder="না থাকলে 0 লিখুন" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Payment (Highly formatted for clear visual prominence) -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">২</span>
+                        <span data-translate="pay_course_fee">কোর্সের মূল্য পেমেন্ট করুন</span>
+                    </h4>
+                    
+                    <!-- ALERT BOX: Designed strictly in highlighted Red (লাল) as per request -->
+                    <div class="bg-red-50/65 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 p-4 rounded-xl text-xs text-red-950 dark:text-red-200 space-y-3 shadow-inner">
+                        <p class="font-bold flex items-center gap-1.5 text-red-700 dark:text-red-400"><i class="fa-solid fa-wallet text-red-600 dark:text-red-400"></i> <span data-translate="admin_nums">এডমিনের পেমেন্ট নম্বরসমূহ:</span></p>
+                        
+                        <div class="grid grid-cols-1 gap-2.5 text-slate-800 dark:text-slate-100">
+                            <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border border-red-100 dark:border-red-900/30">
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">বিকাশ (Personal):</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="admin-bkash" class="font-mono font-bold">N/A</span>
+                                    <button type="button" onclick="copyToClipboard('admin-bkash', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                        <i class="fa-regular fa-copy text-emerald-500"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border border-red-100 dark:border-red-900/30">
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">নগদ (Personal):</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="admin-nagad" class="font-mono font-bold">N/A</span>
+                                    <button type="button" onclick="copyToClipboard('admin-nagad', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                        <i class="fa-regular fa-copy text-emerald-500"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border border-red-100 dark:border-red-900/30">
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">রকেট (Personal):</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="admin-rocket" class="font-mono font-bold">N/A</span>
+                                    <button type="button" onclick="copyToClipboard('admin-rocket', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                        <i class="fa-regular fa-copy text-emerald-500"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- HIGHLY BOLD & HIGHLIGHTED RED INSTRUCTIONS BOX -->
+                        <div class="mt-4 pt-4 border-t-2 border-dashed border-red-300 dark:border-red-900/50 bg-red-100/70 dark:bg-red-950/45 p-4 rounded-xl">
+                            <p class="font-black text-sm md:text-base mb-2 text-red-700 dark:text-red-400 flex items-center gap-2 uppercase tracking-wide" data-translate="rules_special">
+                                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i> পেমেন্ট করার বিশেষ নিয়ম:
+                            </p>
+                            <p id="admin-pay-instruction" class="font-extrabold text-xs md:text-sm text-red-950 dark:text-red-100 leading-relaxed bg-white dark:bg-slate-900/90 p-3 rounded-lg border border-red-200 dark:border-red-900 shadow-sm">
+                                উপরে উল্লেখিত নম্বরে সঠিক মূল্য সেন্ড মানি করুন।
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-500/10 p-4 rounded-xl text-sm flex justify-between items-center border border-emerald-500/20">
+                        <span class="font-bold text-slate-700 dark:text-slate-300" data-translate="total_payable">মোট পরিশোধযোগ্য মূল্য:</span>
+                        <span class="font-black text-emerald-600 dark:text-emerald-400 text-xl md:text-2xl" id="modal-course-price">৳0</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="select_pay_method">পেমেন্ট মেথড সিলেক্ট করুন <span class="text-red-500">*</span></label>
+                            <select id="payment-method" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                                <option value="" data-translate="select_option">নির্বাচন করুন</option>
+                                <option value="bKash">bKash (বিকাশ)</option>
+                                <option value="Nagad">Nagad (নগদ)</option>
+                                <option value="Rocket">Rocket (রকেট)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="txid">ট্রানজেকশন আইডি (TxID) <span class="text-red-500">*</span></label>
+                            <input type="text" id="payment-txid" required placeholder="9N5K7B4P" class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full premium-btn-gradient text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-emerald-500/20" data-translate="submit_req">
+                    ক্রয় সম্পন্ন করার অনুরোধ পাঠান
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Draggable Live Talk Bot Button -->
+    <div id="floating-bot-btn" class="fixed bottom-24 right-6 z-40 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-300/30 flex items-center justify-center transition-transform active:scale-95 select-none touch-none cursor-grab active:cursor-grabbing">
+        <div class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25"></div>
+        <i class="fa-solid fa-robot text-2xl relative z-10"></i>
+    </div>
+
+    <!-- Live Talk Bot Chatbot Modal -->
+    <div id="chatbot-modal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm hidden items-center justify-center p-3 md:p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md h-[550px] max-h-[85vh] md:max-h-[90vh] flex flex-col relative overflow-hidden border border-slate-100">
+            <!-- Bot Header -->
+            <div class="bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white p-4 flex justify-between items-center shadow-md">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-white text-emerald-600 flex items-center justify-center font-bold shadow-sm">
+                        <i class="fa-solid fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-sm tracking-wide" data-translate="chatbot_title">লাইভ টক বট</h4>
+                        <span class="text-[10px] text-emerald-100 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> <span data-translate="online_assist">অনলাইন অ্যাসিস্ট্যান্ট</span>
+                        </span>
+                    </div>
+                </div>
+                <button onclick="closeChatBot()" class="text-white/80 hover:text-white text-2xl p-1 transition">&times;</button>
+            </div>
+
+            <!-- Chat Area -->
+            <div id="chat-box" class="flex-grow p-4 overflow-y-auto space-y-4 bg-slate-50 text-sm">
+                <div class="flex items-start space-x-2">
+                    <div class="bg-white text-slate-800 p-3 rounded-2xl shadow-sm border border-slate-100 max-w-[80%] leading-relaxed" data-translate="bot_welcome">
+                        হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন সিলেক্ট করুন।
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Questions Horizontal Slider -->
+            <div class="border-t border-slate-100 p-3 bg-white shadow-lg">
+                <p class="text-[10px] font-bold text-slate-400 px-1 mb-2" data-translate="select_question_helper">প্রশ্ন সিলেক্ট করুন (ডান-বামে স্ক্রল হবে):</p>
+                <div id="bot-questions-container" class="flex space-x-2 overflow-x-auto no-scrollbar py-1 px-1">
+                    <!-- Dynamic Questions Buttons -->
+                    <span class="text-xs text-slate-400 italic">কোনো প্রশ্ন যুক্ত করা হয়নি।</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Bottom Navigation Bar -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40 py-2.5 px-4 flex justify-around items-center max-w-lg mx-auto rounded-t-2xl md:border-x">
+        <button id="nav-btn-home" onclick="navigateTo('view-home')" class="flex flex-col items-center justify-center gap-1 text-emerald-500 font-extrabold drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] transition duration-150">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_home">হোম</span>
+        </button>
+        <button id="nav-btn-trending" onclick="navigateTo('view-trending')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
+            <i class="fa-solid fa-fire text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_trending">ট্রেন্ডিং</span>
+        </button>
+        <button id="nav-btn-admin-contact" onclick="navigateTo('view-admin-contact')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
+            <i class="fa-solid fa-id-card text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_contact">কন্টাক্ট</span>
+        </button>
+        <button id="nav-btn-settings" onclick="navigateTo('view-settings')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_settings">সেটিংস</span>
+        </button>
+    </div>
+
+
+    <script>
+        // ==========================================
+        // ফায়ারবেস কনফিগারেশন
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyC3N98SpepBL5l4ln7noNGBXKJ4Pm9xXh4",
+          authDomain: "dep-sign.firebaseapp.com",
+          databaseURL: "https://dep-sign-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "dep-sign",
+          storageBucket: "dep-sign.firebasestorage.app",
+          messagingSenderId: "262598434867",
+          appId: "1:262598434867:web:15d93bafd45ecc764e0346"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Global Application Variables
+        let globalSettings = {};
+        let currentLang = localStorage.getItem('site_lang') || 'bn';
+        let currentTheme = localStorage.getItem('site_theme') || 'light';
+
+        // Translation dictionary
+        const i18n = {
+            bn: {
+                welcome_title: "স্বাগতম আমাদের প্ল্যাটফর্মে",
+                welcome_bio: "আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।",
+                available_courses: "উপলব্ধ কোর্সসমূহ",
+                courses_loading: "কোর্স লোড হচ্ছে...",
+                trending_courses: "আজকের ট্রেন্ডিং কোর্সসমূহ",
+                no_trending: "বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।",
+                admin_contact: "এডমিন কন্টাক্ট ইনফো",
+                loading: "লোড হচ্ছে...",
+                settings: "সেটিংস (Settings)",
+                theme_mode: "থিম মোড (Theme Mode)",
+                theme_desc: "ডার্ক বা লাইট মোড পরিবর্তন করুন",
+                theme_toggle_btn: currentTheme === 'dark' ? "লাইট মোড" : "ডার্ক মোড",
+                lang_mode: "ভাষা পরিবর্তন (Language)",
+                lang_desc: "ভাষা বাংলা বা ইংরেজি করুন",
+                nav_home: "হোম",
+                nav_trending: "ট্রেন্ডিং",
+                nav_contact: "কন্টাক্ট",
+                nav_settings: "সেটিংস",
+                buy_now: "কোর্সটি ক্রয় করুন",
+                duration: "মেয়াদ",
+                time: "সময়",
+                fee: "কোর্স ফি",
+                rules_title: "জরুরী নিয়মাবলী",
+                personal_info: "আপনার ব্যক্তিগত তথ্য প্রদান করুন",
+                full_name: "আপনার সম্পূর্ণ নাম *",
+                whatsapp_no: "সক্রিয় হোয়াটসঅ্যাপ নম্বর *",
+                email_addr: "সক্রিয় ইমেইল অ্যাড্রেস *",
+                address: "বর্তমান ঠিকানা (সংক্ষিপ্ত) *",
+                age: "আপনার বয়স (বছর) *",
+                experience: "অনলাইনে কাজের অভিজ্ঞতা (বছর) *",
+                pay_course_fee: "কোর্সের মূল্য পেমেন্ট করুন",
+                admin_nums: "এডমিনের পেমেন্ট নম্বরসমূহ:",
+                rules_special: "পেমেন্ট করার বিশেষ নিয়ম:",
+                total_payable: "মোট পরিশোধযোগ্য মূল্য:",
+                select_pay_method: "পেমেন্ট মেথড সিলেক্ট করুন *",
+                select_option: "নির্বাচন করুন",
+                txid: "ট্রানজেকশন আইডি (TxID) *",
+                submit_req: "ক্রয় সম্পন্ন করার অনুরোধ পাঠান",
+                chatbot_title: "লাইভ টক বট",
+                online_assist: "অনлайн অ্যাসিস্ট্যান্ট",
+                bot_welcome: "হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন সিলেক্ট করুন।",
+                select_question_helper: "প্রশ্ন সিলেক্ট করুন (ডান-বামে স্ক্রল হবে):",
+                cancel_search: "বন্ধ করুন"
+            },
+            en: {
+                welcome_title: "Welcome to Our Platform",
+                welcome_bio: "Choose your favorite course and services from our expert curated listing.",
+                available_courses: "Available Courses",
+                courses_loading: "Loading courses...",
+                trending_courses: "Today's Trending Courses",
+                no_trending: "No trending courses available right now.",
+                admin_contact: "Admin Contact Information",
+                loading: "Loading...",
+                settings: "Settings",
+                theme_mode: "Theme Mode",
+                theme_desc: "Toggle between Dark and Light theme",
+                theme_toggle_btn: currentTheme === 'dark' ? "Light Mode" : "Dark Mode",
+                lang_mode: "Change Language",
+                lang_desc: "Switch between Bengali and English",
+                nav_home: "Home",
+                nav_trending: "Trending",
+                nav_contact: "Contact",
+                nav_settings: "Settings",
+                buy_now: "Buy Course",
+                duration: "Duration",
+                time: "Time",
+                fee: "Course Fee",
+                rules_title: "Important Rules",
+                personal_info: "Provide Your Personal Information",
+                full_name: "Your Full Name *",
+                whatsapp_no: "Active WhatsApp Number *",
+                email_addr: "Active Email Address *",
+                address: "Current Address (Brief) *",
+                age: "Your Age (Years) *",
+                experience: "Online Work Experience (Years) *",
+                pay_course_fee: "Pay the Course Fee",
+                admin_nums: "Admin's Payment Numbers:",
+                rules_special: "Special Payment Instructions:",
+                total_payable: "Total Payable Fee:",
+                select_pay_method: "Select Payment Method *",
+                select_option: "Choose Method",
+                txid: "Transaction ID (TxID) *",
+                submit_req: "Submit Purchase Request",
+                chatbot_title: "Live Talk Bot",
+                online_assist: "Online Assistant",
+                bot_welcome: "Hello! Welcome to our platform. How can I help you? Select any question below.",
+                select_question_helper: "Select a question (scrolls left-to-right):",
+                cancel_search: "Cancel"
+            }
+        };
+
+        // Document Ready Event
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('footer-year').innerText = new Date().getFullYear();
+            loadSettings();
+            loadCourses();
+            loadGigs();
+            loadBotQuestions();
+            checkAndClearChatHistory();
+            initDraggableBot();
+            
+            // Apply Saved Language & Theme Preference
+            applyLanguage(currentLang);
+            applyTheme(currentTheme);
+        });
+
+        // SPA Navigation Logic
+        function navigateTo(viewId) {
+            // Force close search bar when navigating to other views
+            toggleSearch(false);
+
+            // Hide all views
+            document.querySelectorAll('.spa-view').forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('block');
+            });
+            
+            // Show selected view
+            const activeView = document.getElementById(viewId);
+            activeView.classList.remove('hidden');
+            activeView.classList.add('block');
+
+            // Dynamic Visibility for Header & Footer
+            const headerSection = document.getElementById('header-section');
+            const footerSection = document.querySelector('footer');
+
+            if (viewId === 'view-home') {
+                headerSection.style.display = '';
+                footerSection.style.display = '';
+            } else {
+                headerSection.style.display = 'none';
+                footerSection.style.display = 'none';
+            }
+
+            // Reset navigation active state
+            document.querySelectorAll('.bottom-nav button').forEach(btn => {
+                btn.classList.remove('text-emerald-500', 'font-extrabold', 'drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Set current nav active
+            const activeNavBtnId = 'nav-btn-' + viewId.replace('view-', '');
+            const activeBtn = document.getElementById(activeNavBtnId);
+            activeBtn.classList.add('text-emerald-500', 'font-extrabold', 'drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]');
+            activeBtn.classList.remove('text-slate-500');
+
+            // Scroll smoothly to top when switching views
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Multi Language Switcher Implementation
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('site_lang', lang);
+            applyLanguage(lang);
+            // Re-render courses and gigs dynamically to show updated translated schedules/labels
+            loadCourses();
+            loadGigs();
+        }
+
+        function applyLanguage(lang) {
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const translationKey = el.getAttribute('data-translate');
+                if (i18n[lang][translationKey]) {
+                    el.innerText = i18n[lang][translationKey];
+                }
+            });
+
+            // Language specific button visual state inside Settings View
+            if (lang === 'bn') {
+                document.getElementById('lang-bn').className = "premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent";
+                document.getElementById('lang-en').className = "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent";
+            } else {
+                document.getElementById('lang-bn').className = "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent";
+                document.getElementById('lang-en').className = "premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent";
+            }
+            
+            // Update placeholders dynamically based on language selection
+            document.getElementById('search-input').placeholder = lang === 'bn' ? "কোর্স খুঁজুন..." : "Search courses...";
+            document.getElementById('user-name').placeholder = lang === 'bn' ? "উদাহরণ: মো: আব্দুল্লাহ আল মামুন" : "Example: John Doe";
+            document.getElementById('user-address').placeholder = lang === 'bn' ? "গ্রাম/রোড, থানা, জেলা" : "City, Country";
+            document.getElementById('user-age').placeholder = lang === 'bn' ? "যেমন: ২২" : "Ex: 22";
+            document.getElementById('user-exp').placeholder = lang === 'bn' ? "না থাকলে 0 লিখুন" : "Ex: 2 (Write 0 if none)";
+            document.getElementById('payment-txid').placeholder = lang === 'bn' ? "উদাহরণ: 9N5K7B4P" : "Ex: 9N5K7B4P";
+        }
+
+        // Theme Toggle Implementation
+        function toggleTheme() {
+            currentTheme = (currentTheme === 'light') ? 'dark' : 'light';
+            localStorage.setItem('site_theme', currentTheme);
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            const btnText = document.getElementById('theme-btn-text');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark-mode');
+                if (btnText) btnText.innerText = currentLang === 'bn' ? "লাইট মোড" : "Light Mode";
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark-mode');
+                if (btnText) btnText.innerText = currentLang === 'bn' ? "ডার্ক মোড" : "Dark Mode";
+            }
+        }
+
+        // Toggle Search
+        function toggleSearch(show) {
+            const overlay = document.getElementById('search-overlay');
+            const input = document.getElementById('search-input');
+            const heroSection = document.getElementById('hero-section');
+            if (show) {
+                if (heroSection) {
+                    heroSection.style.setProperty('display', 'none', 'important');
+                }
+                overlay.classList.remove('opacity-0', 'pointer-events-none', 'scale-x-0');
+                overlay.classList.add('opacity-100', 'scale-x-100');
+                input.focus();
+            } else {
+                if (heroSection) {
+                    heroSection.style.removeProperty('display');
+                }
+                overlay.classList.add('opacity-0', 'pointer-events-none', 'scale-x-0');
+                overlay.classList.remove('opacity-100', 'scale-x-100');
+                input.value = '';
+                filterCourses('');
+            }
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            input.value = '';
+            input.focus();
+            filterCourses('');
+        }
+
+        // Realtime Client-side Course Filtering
+        function filterCourses(query) {
+            const container = document.getElementById('courses-container');
+            const cards = container.getElementsByClassName('course-card-item');
+            const lowerQuery = (query || '').toLowerCase().trim();
+
+            let matchesCount = 0;
+            for (let card of cards) {
+                const title = (card.getAttribute('data-title') || '').toLowerCase();
+                if (title.includes(lowerQuery)) {
+                    card.style.setProperty('display', 'flex', 'important');
+                    matchesCount++;
+                } else {
+                    card.style.setProperty('display', 'none', 'important');
+                }
+            }
+
+            const existingNoMatch = document.getElementById('no-match-msg');
+            if (matchesCount === 0) {
+                if (!existingNoMatch) {
+                    const errorText = currentLang === 'bn' ? 'কোনো কোর্স পাওয়া যায়নি!' : 'No courses matched your query!';
+                    container.insertAdjacentHTML('beforeend', `<p id="no-match-msg" class="text-slate-400 col-span-full text-center py-12 text-sm">${errorText}</p>`);
+                }
+            } else {
+                if (existingNoMatch) existingNoMatch.remove();
+            }
+        }
+
+        // Rules Modal Controls
+        function openRulesModal() {
+            document.getElementById('rules-modal').classList.remove('hidden');
+            document.getElementById('rules-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRulesModal() {
+            document.getElementById('rules-modal').classList.remove('flex');
+            document.getElementById('rules-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Hybrid Clipboard Copy Mechanism
+        function copyToClipboard(textElementId, buttonEl) {
+            const textToCopy = document.getElementById(textElementId).innerText.trim();
+            if (!textToCopy || textToCopy === 'N/A') return;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            tempInput.style.position = 'fixed';
+            tempInput.style.top = '0';
+            tempInput.style.left = '0';
+            document.body.appendChild(tempInput);
+            tempInput.focus();
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+
+            let copied = false;
+            try {
+                copied = document.execCommand('copy');
+            } catch (err) {
+                copied = false;
+            }
+            document.body.removeChild(tempInput);
+
+            if (copied) {
+                showSuccessState(buttonEl);
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => showSuccessState(buttonEl))
+                    .catch(err => console.error('Clipboard copy failed: ', err));
+            }
+        }
+
+        function showSuccessState(buttonEl) {
+            const icon = buttonEl.querySelector('i');
+            if (!icon) return;
+            icon.className = 'fa-solid fa-circle-check text-emerald-500 animate-bounce';
+            setTimeout(() => {
+                icon.className = 'fa-regular fa-copy text-emerald-600';
+            }, 2000);
+        }
+
+        // Draggable Button logic for live bot
+        function initDraggableBot() {
+            const botBtn = document.getElementById('floating-bot-btn');
+            let isDragging = false;
+            let startX = 0, startY = 0;
+            let initialLeft = 0, initialTop = 0;
+            const dragThreshold = 5;
+
+            function getCoords(e) {
+                if (e.touches && e.touches.length > 0) {
+                    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+                return { x: e.clientX, y: e.clientY };
+            }
+
+            function onStart(e) {
+                if (e.type === 'mousedown' && e.button !== 0) return;
+
+                const coords = getCoords(e);
+                startX = coords.x;
+                startY = coords.y;
+
+                const rect = botBtn.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+
+                isDragging = false;
+
+                if (e.type === 'touchstart') {
+                    document.addEventListener('touchmove', onMove, { passive: false });
+                    document.addEventListener('touchend', onEnd);
+                } else {
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onEnd);
+                }
+            }
+
+            function onMove(e) {
+                const coords = getCoords(e);
+                const dx = coords.x - startX;
+                const dy = coords.y - startY;
+
+                if (!isDragging) {
+                    if (Math.hypot(dx, dy) > dragThreshold) {
+                        isDragging = true;
+                        botBtn.classList.remove('bottom-24', 'right-6');
+                        botBtn.style.setProperty('bottom', 'auto', 'important');
+                        botBtn.style.setProperty('right', 'auto', 'important');
+                    }
+                }
+
+                if (isDragging) {
+                    if (e.cancelable) e.preventDefault();
+
+                    let newLeft = initialLeft + dx;
+                    let newTop = initialTop + dy;
+
+                    const padding = 10;
+                    const maxLeft = window.innerWidth - botBtn.offsetWidth - padding;
+                    const maxTop = window.innerHeight - botBtn.offsetHeight - padding;
+
+                    if (newLeft < padding) newLeft = padding;
+                    if (newLeft > maxLeft) newLeft = maxLeft;
+                    if (newTop < padding) newTop = padding;
+                    if (newTop > maxTop) newTop = maxTop;
+
+                    botBtn.style.left = `${newLeft}px`;
+                    botBtn.style.top = `${newTop}px`;
+                }
+            }
+
+            function onEnd(e) {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+
+                if (!isDragging) {
+                    openChatBot();
+                }
+            }
+
+            botBtn.addEventListener('mousedown', onStart);
+            botBtn.addEventListener('touchstart', onStart, { passive: true });
+        }
+
+        // 1. Load Admin Settings
+        function loadSettings() {
+            database.ref('settings').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    globalSettings = data;
+                    
+                    document.getElementById('site-title').innerText = data.siteName || "কোর্স প্ল্যাটফর্ম";
+                    document.getElementById('site-name').innerText = data.siteName || "কোর্স প্ল্যাটফর্ম";
+                    document.getElementById('footer-site-name').innerText = data.siteName || "কোর্স প্ল্যাটফর্ম";
+                    
+                    if (currentLang === 'bn') {
+                        document.getElementById('hero-title').innerText = data.siteName || "স্বাগতম আমাদের প্ল্যাটফর্মে";
+                        document.getElementById('site-bio').innerText = data.bio || "আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।";
+                    }
+                    
+                    document.getElementById('site-rules').innerText = data.rules || "কোনো নিয়মাবলী যুক্ত করা হয়নি।";
+                    
+                    if (data.logoUrl) {
+                        document.getElementById('site-logo').src = data.logoUrl;
+                    }
+
+                    document.getElementById('admin-bkash').innerText = data.bkash || "N/A";
+                    document.getElementById('admin-nagad').innerText = data.nagad || "N/A";
+                    document.getElementById('admin-rocket').innerText = data.rocket || "N/A";
+                    document.getElementById('admin-pay-instruction').innerText = data.paymentInstructions || "উপরে উল্লেখিত নম্বরে সঠিক মূল্য সেন্ড মানি করুন।";
+                }
+            });
+        }
+
+        // 2. Load Active Courses
+        function loadCourses() {
+            database.ref('courses').off('value'); 
+            database.ref('courses').on('value', (snapshot) => {
+                const container = document.getElementById('courses-container');
+                const trendingContainer = document.getElementById('trending-courses-container');
+                
+                container.innerHTML = '';
+                trendingContainer.innerHTML = '';
+                
+                const data = snapshot.val();
+                if (!data) {
+                    container.innerHTML = `<p class="text-slate-400 col-span-full text-center py-12 text-sm" data-translate="no_courses">${currentLang === 'bn' ? 'বর্তমানে কোনো কোর্স উপলব্ধ নেই।' : 'No courses available right now.'}</p>`;
+                    trendingContainer.innerHTML = `<p class="text-slate-400 col-span-full text-center py-12 text-sm" data-translate="no_trending">${currentLang === 'bn' ? 'বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।' : 'No trending courses available right now.'}</p>`;
+                    return;
+                }
+
+                let hasCourses = false;
+                let hasTrending = false;
+                
+                const dayMap = currentLang === 'bn' ? {
+                    'sat': 'শনি', 'sun': 'রবি', 'mon': 'সোম', 'tue': 'মঙ্গল', 'wed': 'বুধ', 'thu': 'বৃহঃ', 'fri': 'শুক্র'
+                } : {
+                    'sat': 'Sat', 'sun': 'Sun', 'mon': 'Mon', 'tue': 'Tue', 'wed': 'Wed', 'thu': 'Thu', 'fri': 'Fri'
+                };
+
+                for (let key in data) {
+                    const course = data[key];
+                    if (!course) continue; 
+                    if (course.status === 'paused') continue;
+                    hasCourses = true;
+
+                    const isTrending = course.isTrending || false;
+                    const durationText = currentLang === 'bn' ? 'মেয়াদ' : 'Duration';
+                    const timeText = currentLang === 'bn' ? 'সময়' : 'Time';
+                    const feeText = currentLang === 'bn' ? 'কোর্স ফি' : 'Fee';
+                    const buyBtnText = currentLang === 'bn' ? 'কোর্সটি ক্রয় করুন' : 'Buy Course';
+                    const classDaysText = currentLang === 'bn' ? 'ক্লাসের দিনসমূহ' : 'Class Days';
+
+                    const activeDaysTranslated = (course.classDaysList || '').split(',')
+                        .map(d => dayMap[d.trim()])
+                        .filter(Boolean)
+                        .join(', ');
+
+                    // HIGHLY VISIBLE SLASHED ORIGINAL PRICE BADGE
+                    const hasDiscount = course.discountPrice && parseInt(course.discountPrice) < parseInt(course.price);
+                    const priceDisplay = hasDiscount 
+                        ? `<div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm md:text-base font-black text-rose-500 dark:text-rose-400 line-through decoration-rose-600 dark:decoration-rose-500 decoration-2 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md shadow-sm border border-rose-100 dark:border-rose-900/20 mr-1 flex items-center gap-1">
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-rose-600 dark:text-rose-400 opacity-75">${currentLang === 'bn' ? 'পূর্বের মূল্য: ' : 'Was: '}</span>
+                                ৳${course.price}
+                            </span>
+                            <span class="text-emerald-500 dark:text-emerald-400 font-extrabold text-2xl md:text-3xl tracking-tight">৳${course.discountPrice}</span>
+                           </div>`
+                        : `<span class="text-emerald-500 dark:text-emerald-400 font-extrabold text-2xl md:text-3xl tracking-tight">৳${course.price || '0'}</span>`;
+
+                    const finalPayablePrice = hasDiscount ? course.discountPrice : (course.price || '0');
+
+                    const cardHTML = `
+                        <div data-title="${course.name || ''}" class="course-card-item bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group relative">
+                            <!-- Trending Indicator on card -->
+                            ${isTrending ? `<span class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider z-10 flex items-center gap-1 shadow"><i class="fa-solid fa-fire animate-pulse text-xs"></i> ${currentLang === 'bn' ? 'ট্রেন্ডিং' : 'Trending'}</span>` : ''}
+                            
+                            <div class="relative overflow-hidden aspect-video">
+                                <img src="${course.bannerUrl || 'https://via.placeholder.com/400x200?text=No+Banner'}" alt="${course.name || ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent"></div>
+                            </div>
+                            <div class="p-6 flex-grow flex flex-col justify-between">
+                                <div class="space-y-3">
+                                    <h3 class="font-bold text-base md:text-lg text-slate-900 dark:text-slate-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">${course.name || ''}</h3>
+                                    
+                                    ${course.description ? `<p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-100/50 dark:border-slate-800">${course.description}</p>` : ''}
+
+                                    <div class="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-1">
+                                        <p class="flex items-center gap-2"><i class="fa-regular fa-clock text-emerald-500 dark:text-emerald-400"></i> ${durationText}: <span class="font-semibold">${course.duration || 'N/A'}</span></p>
+                                        <p class="flex items-center gap-2"><i class="fa-regular fa-calendar-days text-emerald-500 dark:text-emerald-400"></i> ${timeText}: <span class="font-semibold">${course.time || 'N/A'}</span></p>
+                                        
+                                        ${activeDaysTranslated ? `<p class="flex items-center gap-2"><i class="fa-solid fa-calendar-week text-emerald-500 dark:text-emerald-400"></i> ${classDaysText}: <span class="font-semibold">${activeDaysTranslated}</span> (${course.classDaysCount || '0'} ${currentLang === 'bn' ? 'দিন' : 'days'})</p>` : ''}
+                                    </div>
+                                </div>
+                                <div class="mt-6 pt-4 border-t border-slate-50 dark:border-slate-700">
+                                    <div class="flex flex-col gap-1.5 mb-4">
+                                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">${feeText}</span>
+                                        ${priceDisplay}
+                                    </div>
+                                    <button onclick="openEnrollModal('${key}', '${course.name || ''}', '${finalPayablePrice}')" class="w-full premium-btn-gradient text-white font-bold py-2.5 rounded-xl transition duration-200 text-center text-sm shadow-sm">
+                                        ${buyBtnText}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                    
+                    if (isTrending) {
+                        hasTrending = true;
+                        trendingContainer.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+                }
+
+                if (!hasCourses) {
+                    container.innerHTML = `<p class="text-slate-400 col-span-full text-center py-12 text-sm">${currentLang === 'bn' ? 'বর্তমানে কোনো কোর্স উপলব্ধ নেই।' : 'No courses available right now.'}</p>`;
+                }
+                if (!hasTrending) {
+                    trendingContainer.innerHTML = `<p class="text-slate-400 col-span-full text-center py-12 text-sm">${currentLang === 'bn' ? 'বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।' : 'No trending courses available right now.'}</p>`;
+                }
+            });
+        }
+
+        // 3. Load Admin Info (gigs)
+        function loadGigs() {
+            database.ref('gigs').on('value', (snapshot) => {
+                const container = document.getElementById('admin-info-container');
+                container.innerHTML = '';
+
+                const data = snapshot.val();
+                if (!data) {
+                    container.innerHTML = `<p class="text-slate-400 col-span-full text-center py-12 text-sm">${currentLang === 'bn' ? 'কোনো কন্টাক্ট ইনফরমেশন পাওয়া যায়নি।' : 'No contact information found.'}</p>`;
+                    return;
+                }
+
+                for (let key in data) {
+                    const gig = data[key];
+                    if (!gig) continue; 
+                    const labelText = currentLang === 'bn' ? 'কন্টাক্ট ইনফো' : 'Contact Info';
+                    const providerText = currentLang === 'bn' ? 'নাম' : 'Name';
+                    const callText = currentLang === 'bn' ? 'কল করুন' : 'Call Now';
+                    const telegramText = currentLang === 'bn' ? 'টেলিগ্রাম' : 'Telegram';
+
+                    const card = `
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col justify-between hover:shadow-lg transition duration-300">
+                            <div>
+                                <span class="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${labelText}</span>
+                                <h3 class="font-bold text-slate-900 dark:text-slate-100 mt-3 mb-1.5 leading-snug">${gig.workType || 'কাজের বিবরণী'}</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-400"></i> ${providerText}: ${gig.adminName || 'Pedmin'}</p>
+                            </div>
+                            <div class="flex flex-col gap-2 pt-4 border-t border-slate-50 dark:border-slate-700 text-xs">
+                                <a href="tel:${gig.contactNo}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2.5 py-1 transition">
+                                    <span class="w-6 h-6 rounded bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xs"><i class="fa-solid fa-phone"></i></span> ${callText}: ${gig.contactNo || 'N/A'}
+                                </a>
+                                <a href="https://t.me/${gig.telegram}" target="_blank" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2.5 py-1 transition">
+                                    <span class="w-6 h-6 rounded bg-sky-50 text-sky-600 flex items-center justify-center text-xs"><i class="fa-brands fa-telegram"></i></span> ${telegramText}: @${gig.telegram || ''}
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', card);
+                }
+            });
+        }
+
+        // 4. Modal Handlers
+        function openEnrollModal(courseId, courseName, coursePrice) {
+            document.getElementById('enroll-course-id').value = courseId;
+            document.getElementById('enroll-course-title').value = courseName;
+            
+            const titlePrefix = currentLang === 'bn' ? 'কোর্সটি ক্রয় করুন' : 'Buy Course';
+            document.getElementById('modal-course-name').innerText = `"${courseName}" ${titlePrefix}`;
+            document.getElementById('modal-course-price').innerText = `৳${coursePrice}`;
+            
+            document.getElementById('enroll-modal').classList.remove('hidden');
+            document.getElementById('enroll-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeEnrollModal() {
+            document.getElementById('enroll-modal').classList.remove('flex');
+            document.getElementById('enroll-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto'; 
+            document.getElementById('enroll-form').reset();
+        }
+
+        // 5. Submit Payment request
+        function submitEnrollment(e) {
+            e.preventDefault();
+
+            const courseId = document.getElementById('enroll-course-id').value;
+            const courseName = document.getElementById('enroll-course-title').value;
+            
+            const enrollmentData = {
+                courseId: courseId,
+                courseName: courseName,
+                name: document.getElementById('user-name').value,
+                whatsapp: document.getElementById('user-whatsapp').value,
+                email: document.getElementById('user-email').value,
+                address: document.getElementById('user-address').value,
+                age: document.getElementById('user-age').value,
+                experience: document.getElementById('user-exp').value,
+                paymentMethod: document.getElementById('payment-method').value,
+                txnId: document.getElementById('payment-txid').value,
+                status: 'pending', 
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            database.ref('enrollments/pending').push(enrollmentData)
+                .then(() => {
+                    const successMsg = currentLang === 'bn' ? 'আপনার ক্রয়ের অনুরোধটি জমা হয়েছে। এডমিন পেমেন্ট যাচাই করে শীঘ্রই কোর্সটি ভেরিফাই করবেন। ধন্যবাদ!' : 'Your purchase request has been submitted. Admin will verify the payment and authorize the course soon. Thank you!';
+                    alert(successMsg);
+                    closeEnrollModal();
+                })
+                .catch((error) => {
+                    console.error("error: ", error);
+                    const errorMsg = currentLang === 'bn' ? 'দুঃখিত, কোনো একটি কারিগরি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।' : 'Sorry, a technical error occurred. Please try again.';
+                    alert(errorMsg);
+                });
+        }
+
+        // ==============================
+        // LIVE TALK BOT SYSTEM
+        // ==============================
+
+        function openChatBot() {
+            document.getElementById('chatbot-modal').classList.remove('hidden');
+            document.getElementById('chatbot-modal').classList.add('flex');
+            scrollChatToBottom();
+        }
+
+        function closeChatBot() {
+            document.getElementById('chatbot-modal').classList.remove('flex');
+            document.getElementById('chatbot-modal').classList.add('hidden');
+        }
+
+        function loadBotQuestions() {
+            database.ref('bot').on('value', (snapshot) => {
+                const container = document.getElementById('bot-questions-container');
+                container.innerHTML = '';
+
+                const data = snapshot.val();
+                if (!data) {
+                    const noHelpText = currentLang === 'bn' ? 'কোনো সাহায্যকারী প্রশ্ন সেট করা নেই।' : 'No FAQ questions loaded.';
+                    container.innerHTML = `<span class="text-xs text-slate-400 italic">${noHelpText}</span>`;
+                    return;
+                }
+
+                for (let key in data) {
+                    const item = data[key];
+                    if (!item) continue; 
+                    const btn = document.createElement('button');
+                    btn.className = "flex-shrink-0 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 text-xs px-3.5 py-2 rounded-full border border-emerald-500/20 transition duration-150 font-bold whitespace-nowrap dark:bg-slate-700 dark:text-emerald-200 dark:border-slate-600";
+                    btn.innerText = item.question;
+                    btn.onclick = () => selectQuestion(item.question, item.answer);
+                    container.appendChild(btn);
+                }
+            });
+        }
+
+        function selectQuestion(question, answer) {
+            if (!localStorage.getItem('chat_session_time')) {
+                localStorage.setItem('chat_session_time', Date.now());
+            }
+
+            const chatBox = document.getElementById('chat-box');
+
+            const userBubble = `
+                <div class="flex items-start justify-end space-x-2">
+                    <div class="bg-emerald-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-sm leading-relaxed font-bold">
+                        ${question}
+                    </div>
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', userBubble);
+            scrollChatToBottom();
+
+            const typingId = "typing-" + Date.now();
+            const typingBubble = `
+                <div id="${typingId}" class="flex items-start space-x-2 animate-pulse">
+                    <div class="bg-white text-slate-400 p-3 rounded-2xl rounded-tl-none max-w-[80%] border border-slate-100 shadow-sm flex items-center space-x-1 dark:bg-slate-800 dark:border-slate-700">
+                        <span class="animate-bounce inline-block w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                        <span class="animate-bounce inline-block w-1.5 h-1.5 bg-slate-400 rounded-full" style="animation-delay: 0.2s"></span>
+                        <span class="animate-bounce inline-block w-1.5 h-1.5 bg-slate-400 rounded-full" style="animation-delay: 0.4s"></span>
+                    </div>
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', typingBubble);
+            scrollChatToBottom();
+
+            setTimeout(() => {
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.remove();
+
+                const botBubble = `
+                    <div class="flex items-start space-x-2">
+                        <div class="bg-white text-slate-800 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-sm border border-slate-100 leading-relaxed dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 font-semibold">
+                            ${answer}
+                        </div>
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', botBubble);
+                scrollChatToBottom();
+
+                localStorage.setItem('saved_chat_html', chatBox.innerHTML);
+            }, 1500);
+        }
+
+        function scrollChatToBottom() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function checkAndClearChatHistory() {
+            const lastSession = localStorage.getItem('chat_session_time');
+            const savedChat = localStorage.getItem('saved_chat_html');
+            const chatBox = document.getElementById('chat-box');
+
+            if (lastSession) {
+                const elapsed = Date.now() - parseInt(lastSession);
+                if (elapsed > 300000) { 
+                    localStorage.removeItem('chat_session_time');
+                    localStorage.removeItem('saved_chat_html');
+                } else if (savedChat) {
+                    chatBox.innerHTML = savedChat;
+                    scrollChatToBottom();
+                }
+            }
+
+            setInterval(() => {
+                const sessionTime = localStorage.getItem('chat_session_time');
+                if (sessionTime) {
+                    if (Date.now() - parseInt(sessionTime) > 300000) {
+                        localStorage.removeItem('chat_session_time');
+                        localStorage.removeItem('saved_chat_html');
+                        const defaultText = currentLang === 'bn' ? 'হ্যালো! পূর্ববর্তী চ্যাট সেশনটি সময়সীমা অতিক্রম করায় মুছে ফেলা হয়েছে। আমি আপনাকে কীভাবে সাহায্য করতে পারি?' : 'Hello! The previous chat session was cleared due to inactivity. How can I help you?';
+                        chatBox.innerHTML = `
+                            <div class="flex items-start space-x-2">
+                                <div class="bg-white text-slate-850 p-3 rounded-2xl shadow-sm border border-slate-100 max-w-[80%] dark:bg-slate-800 dark:border-slate-700 font-semibold">
+                                    ${defaultText}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }, 30000);
+        }
+    </script>
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-xs mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>&copy; <span id="footer-year"></span> <span id="footer-site-name" class="font-bold text-slate-300">লোড হচ্ছে...</span>. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

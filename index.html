@@ -127,7 +127,7 @@
             border-color: #334155 !important;
         }
         
-        /* Highlight/Emergency elements strictly Red (লাল) */
+        /* Highlight/Emergency elements strictly Red */
         html.dark .bg-red-50\/65,
         html.dark .bg-red-50 {
             background-color: rgba(239, 68, 68, 0.1) !important;
@@ -211,7 +211,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans flex flex-col min-h-screen selection:bg-emerald-500 selection:text-white pb-24 transition-colors duration-200">
+<body class="bg-slate-50 text-slate-800 font-sans flex flex-col min-h-screen selection:bg-emerald-500 selection:text-white pb-28 md:pb-36 transition-colors duration-200">
 
     <!-- Header / Navbar -->
     <header id="header-section" class="bg-white/85 dark:bg-slate-900/85 backdrop-blur-md shadow-sm sticky top-0 z-40 transition-all border-b border-slate-100 dark:border-slate-800">
@@ -232,31 +232,38 @@
                 </button>
             </div>
 
-            <!-- PREMIUM HORIZONTAL EXPANSION SEARCH BAR -->
-            <div id="search-overlay" class="absolute inset-x-0 top-0 bottom-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 flex items-center justify-between gap-3 transform scale-x-0 origin-right opacity-0 pointer-events-none z-50">
-                <div class="flex items-center gap-3 flex-grow max-w-3xl mx-auto bg-slate-100 dark:bg-slate-800/80 px-4 py-2 rounded-full border border-transparent focus-within:border-emerald-500/30 focus-within:bg-white dark:focus-within:bg-slate-950 transition-all">
-                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterCourses(this.value)" placeholder="কোর্স খুঁজুন..." class="w-full bg-transparent focus:outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400">
-                    <button onclick="clearSearch()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex items-center justify-center">
-                        <i class="fa-solid fa-circle-xmark"></i>
+            <!-- PREMIUM HORIZONTAL EXPANSION SEARCH BAR (Responsive Centered Wrap) -->
+            <div id="search-overlay" class="absolute inset-x-0 top-0 bottom-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 flex items-center justify-center transform scale-x-0 origin-right opacity-0 pointer-events-none z-50">
+                <div class="w-full max-w-7xl flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 flex-grow max-w-3xl bg-slate-100 dark:bg-slate-800/80 px-4 py-2 rounded-full border border-transparent focus-within:border-emerald-500/30 focus-within:bg-white dark:focus-within:bg-slate-950 transition-all">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                        <input type="text" id="search-input" oninput="filterCourses(this.value)" placeholder="কোর্স খুঁজুন..." class="w-full bg-transparent focus:outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400">
+                        <button onclick="clearSearch()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex items-center justify-center">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    </div>
+                    <button onclick="toggleSearch(false)" class="text-xs font-bold text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-colors py-2 px-1 focus:outline-none flex items-center gap-1 shrink-0">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                        <span data-translate="cancel_search">বন্ধ করুন</span>
                     </button>
                 </div>
-                <button onclick="toggleSearch(false)" class="text-xs font-bold text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-colors py-2 px-1 focus:outline-none flex items-center gap-1">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                    <span data-translate="cancel_search">বন্ধ করুন</span>
-                </button>
             </div>
         </div>
     </header>
 
     <!-- SPA VIEW: HOME PAGE -->
     <div id="view-home" class="spa-view block">
-        <!-- Hero / Bio Section -->
-        <section id="hero-section" class="bg-gradient-to-b from-slate-950 via-[#0a231a] to-slate-950 text-white py-12 px-4 text-center relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_50%)]"></div>
+        <!-- Hero / Bio Section with Dynamic Admin Cover Image Support -->
+        <section id="hero-section" class="relative text-white py-12 md:py-20 px-4 text-center overflow-hidden bg-gradient-to-b from-slate-950 via-[#0a231a] to-slate-950">
+            <!-- Cover Banner Background Layer -->
+            <div id="hero-cover" class="absolute inset-0 bg-cover bg-center opacity-30 transition-opacity duration-300"></div>
+            <!-- Glow & Contrast Overlays for superior readability -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.15),transparent_60%)]"></div>
+            <div class="absolute inset-0 bg-slate-950/45"></div>
+            
             <div class="max-w-3xl mx-auto relative z-10 space-y-3">
                 <h1 class="text-2xl md:text-4xl font-extrabold mb-2 tracking-tight leading-tight" id="hero-title" data-translate="welcome_title">স্বাগতম আমাদের প্ল্যাটফর্মে</h1>
-                <p class="text-emerald-300/90 text-xs md:text-sm max-w-xl mx-auto font-light" id="site-bio" data-translate="welcome_bio">আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।</p>
+                <p class="text-emerald-300/90 text-xs md:text-sm max-w-xl mx-auto font-light" id="site-bio" data-translate="welcome_bio">আমাদের মানসম্মত কোর্স ও সার্ভিসগুলো দেখে আপনার প্রয়োজনীয়টি নির্বাচন করুন।</p>
             </div>
         </section>
 
@@ -265,7 +272,7 @@
             <div class="mb-16">
                 <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
                     <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-graduation-cap"></i></span> 
-                    <span data-translate="available_courses">উপলব্ধ কোর্সসমূহ</span>
+                    <span data-translate="available_courses">চলমান কোর্সসমূহ</span>
                 </h2>
                 <div id="courses-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     <p class="text-gray-400 col-span-full text-center py-12" data-translate="courses_loading">কোর্স লোড হচ্ছে...</p>
@@ -280,10 +287,10 @@
             <div class="mb-16">
                 <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
                     <span class="p-2 bg-amber-500/10 rounded-lg text-amber-500"><i class="fa-solid fa-fire animate-pulse"></i></span> 
-                    <span data-translate="trending_courses">আজকের ট্রেন্ডিং কোর্সসমূহ</span>
+                    <span data-translate="trending_courses">জনপ্রিয় ট্রেন্ডিং কোর্সসমূহ</span>
                 </h2>
                 <div id="trending-courses-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="no_trending">বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।</p>
+                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="no_trending">বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধ নেই।</p>
                 </div>
             </div>
         </main>
@@ -295,7 +302,7 @@
             <div class="mb-16">
                 <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
                     <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-user-tie"></i></span> 
-                    <span data-translate="admin_contact">এডমিন কন্টাক্ট ইনফো</span>
+                    <span data-translate="admin_contact">অ্যাডমিন পরিচিতি ও যোগাযোগ</span>
                 </h2>
                 <div id="admin-info-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     <p class="text-gray-400 col-span-full text-center py-12" data-translate="loading">লোড হচ্ছে...</p>
@@ -310,14 +317,14 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-8">
                 <h2 class="text-xl md:text-2xl font-bold text-slate-900 border-b pb-3 flex items-center gap-3">
                     <span class="p-2 bg-slate-100 rounded-lg text-slate-600"><i class="fa-solid fa-gears"></i></span> 
-                    <span data-translate="settings">সেটিংস (Settings)</span>
+                    <span data-translate="settings">সিস্টেম সেটিংস</span>
                 </h2>
 
                 <!-- Theme Toggle -->
                 <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
                     <div class="space-y-0.5">
-                        <h3 class="font-bold text-sm text-slate-900" data-translate="theme_mode">থিম মোড (Theme Mode)</h3>
-                        <p class="text-xs text-slate-500" data-translate="theme_desc">ডার্ক বা লাইট মোড পরিবর্তন করুন</p>
+                        <h3 class="font-bold text-sm text-slate-900" data-translate="theme_mode">থিম পরিবর্তন (Theme Mode)</h3>
+                        <p class="text-xs text-slate-500" data-translate="theme_desc">লাইট বা ডার্ক মোডে পরিবর্তন করুন</p>
                     </div>
                     <button onclick="toggleTheme()" class="premium-btn-gradient text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-2">
                         <i class="fa-solid fa-circle-half-stroke"></i>
@@ -329,7 +336,7 @@
                 <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
                     <div class="space-y-0.5">
                         <h3 class="font-bold text-sm text-slate-900" data-translate="lang_mode">ভাষা পরিবর্তন (Language)</h3>
-                        <p class="text-xs text-slate-500" data-translate="lang_desc">ভাষা বাংলা বা ইংরেজি করুন</p>
+                        <p class="text-xs text-slate-500" data-translate="lang_desc">পছন্দসই ভাষা (বাংলা/ইংরেজি) নির্বাচন করুন</p>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="switchLanguage('bn')" id="lang-bn" class="premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent">বাংলা</button>
@@ -343,7 +350,7 @@
     <!-- Rules Modal -->
     <div id="rules-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative border border-slate-100 transform transition-all">
-            <button onclick="closeRulesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl p-1">&times;</button>
+            <button onclick="closeRulesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl p-1 leading-none">&times;</button>
             <div class="flex items-center gap-3 mb-4 border-b pb-3">
                 <span class="p-2 bg-red-50 rounded-lg text-red-500"><i class="fa-solid fa-circle-info text-xl"></i></span>
                 <h3 class="text-lg font-black text-slate-900 text-red-600" data-translate="rules_title">জরুরী নিয়মাবলী</h3>
@@ -357,7 +364,7 @@
     <!-- Enrollment / Buy Modal -->
     <div id="enroll-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-5 md:p-6 relative my-auto border border-slate-100 flex flex-col max-h-[96vh] md:max-h-[90vh]">
-            <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition p-1" aria-label="Close modal">&times;</button>
+            <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition p-1 leading-none" aria-label="Close modal">&times;</button>
             
             <div class="border-b border-slate-100 pb-4 pr-6">
                 <h3 class="text-lg md:text-xl font-black text-slate-900" id="modal-course-name">কোর্স সাইন আপ</h3>
@@ -371,52 +378,52 @@
                 <div class="space-y-4">
                     <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">১</span>
-                        <span data-translate="personal_info">আপনার ব্যক্তিগত তথ্য প্রদান করুন</span>
+                        <span data-translate="personal_info">আপনার ব্যক্তিগত তথ্য</span>
                     </h4>
                     
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="full_name">আপনার সম্পূর্ণ নাম <span class="text-red-500">*</span></label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="full_name">সম্পূর্ণ নাম *</label>
                         <input type="text" id="user-name" required placeholder="উদাহরণ: মো: আব্দুল্লাহ আল মামুন" class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="whatsapp_no">সক্রিয় হোয়াটসঅ্যাপ নম্বর <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="whatsapp_no">সক্রিয় হোয়াটসঅ্যাপ নম্বর *</label>
                             <input type="tel" id="user-whatsapp" placeholder="017XXXXXXXX" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="email_addr">সক্রিয় ইমেইল অ্যাড্রেস <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="email_addr">সক্রিয় ইমেইল ঠিকানা *</label>
                             <input type="email" id="user-email" placeholder="example@email.com" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="address">বর্তমান ঠিকানা (সংক্ষিপ্ত) <span class="text-red-500">*</span></label>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="address">বর্তমান ঠিকানা *</label>
                         <input type="text" id="user-address" placeholder="গ্রাম/রোড, থানা, জেলা" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="age">আপনার বয়স (বছর) <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="age">বয়স (বছর) *</label>
                             <input type="number" id="user-age" min="5" max="100" placeholder="যেমন: ২২" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="experience">অনলাইনে কাজের অভিজ্ঞতা (বছর) <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="experience">অনলাইন কাজের অভিজ্ঞতা (বছর) *</label>
                             <input type="number" id="user-exp" min="0" max="50" placeholder="না থাকলে 0 লিখুন" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 2: Payment (Highly formatted for clear visual prominence) -->
+                <!-- Step 2: Payment -->
                 <div class="space-y-4">
                     <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">২</span>
-                        <span data-translate="pay_course_fee">কোর্সের মূল্য পেমেন্ট করুন</span>
+                        <span data-translate="pay_course_fee">কোর্স ফি প্রদান করুন</span>
                     </h4>
                     
-                    <!-- ALERT BOX: Designed strictly in highlighted Red (লাল) as per request -->
+                    <!-- ALERT BOX: Designed strictly in highlighted Red -->
                     <div class="bg-red-50/65 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 p-4 rounded-xl text-xs text-red-950 dark:text-red-200 space-y-3 shadow-inner">
-                        <p class="font-bold flex items-center gap-1.5 text-red-700 dark:text-red-400"><i class="fa-solid fa-wallet text-red-600 dark:text-red-400"></i> <span data-translate="admin_nums">এডমিনের পেমেন্ট নম্বরসমূহ:</span></p>
+                        <p class="font-bold flex items-center gap-1.5 text-red-700 dark:text-red-400"><i class="fa-solid fa-wallet text-red-600 dark:text-red-400"></i> <span data-translate="admin_nums">অ্যাডমিন পেমেন্ট নম্বরসমূহ:</span></p>
                         
                         <div class="grid grid-cols-1 gap-2.5 text-slate-800 dark:text-slate-100">
                             <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-2 rounded-lg border border-red-100 dark:border-red-900/30">
@@ -451,22 +458,22 @@
                         <!-- HIGHLY BOLD & HIGHLIGHTED RED INSTRUCTIONS BOX -->
                         <div class="mt-4 pt-4 border-t-2 border-dashed border-red-300 dark:border-red-900/50 bg-red-100/70 dark:bg-red-950/45 p-4 rounded-xl">
                             <p class="font-black text-sm md:text-base mb-2 text-red-700 dark:text-red-400 flex items-center gap-2 uppercase tracking-wide" data-translate="rules_special">
-                                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i> পেমেন্ট করার বিশেষ নিয়ম:
+                                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i> পেমেন্ট করার বিশেষ নিয়মাবলী:
                             </p>
                             <p id="admin-pay-instruction" class="font-extrabold text-xs md:text-sm text-red-950 dark:text-red-100 leading-relaxed bg-white dark:bg-slate-900/90 p-3 rounded-lg border border-red-200 dark:border-red-900 shadow-sm">
-                                উপরে উল্লেখিত নম্বরে সঠিক মূল্য সেন্ড মানি করুন।
+                                উপরে উল্লেখিত যেকোনো একটি পার্সোনাল নম্বরে সঠিক কোর্স ফি 'সেন্ড মানি' (Send Money) করুন।
                             </p>
                         </div>
                     </div>
 
                     <div class="bg-emerald-500/10 p-4 rounded-xl text-sm flex justify-between items-center border border-emerald-500/20">
-                        <span class="font-bold text-slate-700 dark:text-slate-300" data-translate="total_payable">মোট পরিশোধযোগ্য মূল্য:</span>
+                        <span class="font-bold text-slate-700 dark:text-slate-300" data-translate="total_payable">মোট পরিশোধযোগ্য কোর্স ফি:</span>
                         <span class="font-black text-emerald-600 dark:text-emerald-400 text-xl md:text-2xl" id="modal-course-price">৳0</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="select_pay_method">পেমেন্ট মেথড সিলেক্ট করুন <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="select_pay_method">পেমেন্ট মাধ্যম নির্বাচন করুন *</label>
                             <select id="payment-method" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                                 <option value="" data-translate="select_option">নির্বাচন করুন</option>
                                 <option value="bKash">bKash (বিকাশ)</option>
@@ -475,21 +482,21 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="txid">ট্রানজেকশন আইডি (TxID) <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="txid">ট্রানজেকশন আইডি (TxID) *</label>
                             <input type="text" id="payment-txid" required placeholder="9N5K7B4P" class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                     </div>
                 </div>
 
                 <button type="submit" class="w-full premium-btn-gradient text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-emerald-500/20" data-translate="submit_req">
-                    ক্রয় সম্পন্ন করার অনুরোধ পাঠান
+                    ভর্তির আবেদন সম্পন্ন করুন
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Draggable Live Talk Bot Button -->
-    <div id="floating-bot-btn" class="fixed bottom-24 right-6 z-40 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-300/30 flex items-center justify-center transition-transform active:scale-95 select-none touch-none cursor-grab active:cursor-grabbing">
+    <div id="floating-bot-btn" class="fixed bottom-24 md:bottom-28 right-6 md:right-8 z-40 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-300/30 flex items-center justify-center transition-transform active:scale-95 select-none touch-none cursor-grab active:cursor-grabbing">
         <div class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25"></div>
         <i class="fa-solid fa-robot text-2xl relative z-10"></i>
     </div>
@@ -504,27 +511,27 @@
                         <i class="fa-solid fa-robot text-lg"></i>
                     </div>
                     <div>
-                        <h4 class="font-extrabold text-sm tracking-wide" data-translate="chatbot_title">লাইভ টক বট</h4>
+                        <h4 class="font-extrabold text-sm tracking-wide" data-translate="chatbot_title">লাইভ চ্যাট অ্যাসিস্ট্যান্ট</h4>
                         <span class="text-[10px] text-emerald-100 flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> <span data-translate="online_assist">অনলাইন অ্যাসিস্ট্যান্ট</span>
                         </span>
                     </div>
                 </div>
-                <button onclick="closeChatBot()" class="text-white/80 hover:text-white text-2xl p-1 transition">&times;</button>
+                <button onclick="closeChatBot()" class="text-white/80 hover:text-white text-2xl p-1 transition leading-none">&times;</button>
             </div>
 
             <!-- Chat Area -->
             <div id="chat-box" class="flex-grow p-4 overflow-y-auto space-y-4 bg-slate-50 text-sm">
                 <div class="flex items-start space-x-2">
                     <div class="bg-white text-slate-800 p-3 rounded-2xl shadow-sm border border-slate-100 max-w-[80%] leading-relaxed" data-translate="bot_welcome">
-                        হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন সিলেক্ট করুন।
+                        হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন নির্বাচন করুন।
                     </div>
                 </div>
             </div>
 
             <!-- Bot Questions Horizontal Slider -->
             <div class="border-t border-slate-100 p-3 bg-white shadow-lg">
-                <p class="text-[10px] font-bold text-slate-400 px-1 mb-2" data-translate="select_question_helper">প্রশ্ন সিলেক্ট করুন (ডান-বামে স্ক্রল হবে):</p>
+                <p class="text-[10px] font-bold text-slate-400 px-1 mb-2" data-translate="select_question_helper">প্রশ্ন নির্বাচন করুন (ডান-বামে স্ক্রল করতে পারেন):</p>
                 <div id="bot-questions-container" class="flex space-x-2 overflow-x-auto no-scrollbar py-1 px-1">
                     <!-- Dynamic Questions Buttons -->
                     <span class="text-xs text-slate-400 italic">কোনো প্রশ্ন যুক্ত করা হয়নি।</span>
@@ -533,8 +540,8 @@
         </div>
     </div>
 
-    <!-- Sticky Bottom Navigation Bar -->
-    <div class="bottom-nav fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-40 py-2.5 px-4 flex justify-around items-center max-w-lg mx-auto rounded-t-2xl md:border-x">
+    <!-- Sticky Bottom Navigation Bar (Sleek floating capsule dock in large screens) -->
+    <div class="bottom-nav fixed bottom-0 md:bottom-6 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t md:border border-slate-100 dark:border-slate-700 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:shadow-[0_10px_30px_rgba(0,0,0,0.15)] z-40 py-2.5 px-6 flex justify-around items-center max-w-lg mx-auto rounded-t-2xl md:rounded-full transition-all duration-300">
         <button id="nav-btn-home" onclick="navigateTo('view-home')" class="flex flex-col items-center justify-center gap-1 text-emerald-500 font-extrabold drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] transition duration-150">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] font-bold" data-translate="nav_home">হোম</span>
@@ -545,7 +552,7 @@
         </button>
         <button id="nav-btn-admin-contact" onclick="navigateTo('view-admin-contact')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
             <i class="fa-solid fa-id-card text-lg"></i>
-            <span class="text-[10px] font-bold" data-translate="nav_contact">কন্টাক্ট</span>
+            <span class="text-[10px] font-bold" data-translate="nav_contact">যোগাযোগ</span>
         </button>
         <button id="nav-btn-settings" onclick="navigateTo('view-settings')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
             <i class="fa-solid fa-gear text-lg"></i>
@@ -581,59 +588,59 @@
         const i18n = {
             bn: {
                 welcome_title: "স্বাগতম আমাদের প্ল্যাটফর্মে",
-                welcome_bio: "আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।",
-                available_courses: "উপলব্ধ কোর্সসমূহ",
+                welcome_bio: "আমাদের মানসম্মত কোর্স ও সার্ভিসগুলো দেখে আপনার প্রয়োজনীয়টি নির্বাচন করুন।",
+                available_courses: "চলমান কোর্সসমূহ",
                 courses_loading: "কোর্স লোড হচ্ছে...",
-                trending_courses: "আজকের ট্রেন্ডিং কোর্সসমূহ",
-                no_trending: "বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধি নেই।",
-                admin_contact: "এডমিন কন্টাক্ট ইনফো",
+                trending_courses: "জনপ্রিয় ট্রেন্ডিং কোর্সসমূহ",
+                no_trending: "বর্তমানে কোনো ট্রেন্ডিং কোর্স উপলব্ধ নেই।",
+                admin_contact: "অ্যাডমিন পরিচিতি ও যোগাযোগ",
                 loading: "লোড হচ্ছে...",
-                settings: "সেটিংস (Settings)",
-                theme_mode: "থিম মোড (Theme Mode)",
-                theme_desc: "ডার্ক বা লাইট মোড পরিবর্তন করুন",
+                settings: "সিস্টেম সেটিংস",
+                theme_mode: "থিম পরিবর্তন (Theme Mode)",
+                theme_desc: "লাইট বা ডার্ক মোডে পরিবর্তন করুন",
                 theme_toggle_btn: currentTheme === 'dark' ? "লাইট মোড" : "ডার্ক মোড",
                 lang_mode: "ভাষা পরিবর্তন (Language)",
-                lang_desc: "ভাষা বাংলা বা ইংরেজি করুন",
+                lang_desc: "পছন্দসই ভাষা (বাংলা/ইংরেজি) নির্বাচন করুন",
                 nav_home: "হোম",
                 nav_trending: "ট্রেন্ডিং",
-                nav_contact: "কন্টাক্ট",
+                nav_contact: "যোগাযোগ",
                 nav_settings: "সেটিংস",
-                buy_now: "কোর্সটি ক্রয় করুন",
+                buy_now: "ভর্তি হোন",
                 duration: "মেয়াদ",
                 time: "সময়",
                 fee: "কোর্স ফি",
                 rules_title: "জরুরী নিয়মাবলী",
-                personal_info: "আপনার ব্যক্তিগত তথ্য প্রদান করুন",
-                full_name: "আপনার সম্পূর্ণ নাম *",
+                personal_info: "আপনার ব্যক্তিগত তথ্য",
+                full_name: "সম্পূর্ণ নাম *",
                 whatsapp_no: "সক্রিয় হোয়াটসঅ্যাপ নম্বর *",
-                email_addr: "সক্রিয় ইমেইল অ্যাড্রেস *",
-                address: "বর্তমান ঠিকানা (সংক্ষিপ্ত) *",
-                age: "আপনার বয়স (বছর) *",
-                experience: "অনলাইনে কাজের অভিজ্ঞতা (বছর) *",
-                pay_course_fee: "কোর্সের মূল্য পেমেন্ট করুন",
-                admin_nums: "এডমিনের পেমেন্ট নম্বরসমূহ:",
-                rules_special: "পেমেন্ট করার বিশেষ নিয়ম:",
-                total_payable: "মোট পরিশোধযোগ্য মূল্য:",
-                select_pay_method: "পেমেন্ট মেথড সিলেক্ট করুন *",
+                email_addr: "সক্রিয় ইমেইল ঠিকানা *",
+                address: "বর্তমান ঠিকানা *",
+                age: "বয়স (বছর) *",
+                experience: "অনলাইন কাজের অভিজ্ঞতা (বছর) *",
+                pay_course_fee: "কোর্স ফি প্রদান করুন",
+                admin_nums: "অ্যাডমিন পেমেন্ট নম্বরসমূহ:",
+                rules_special: "পেমেন্ট করার বিশেষ নিয়মাবলী:",
+                total_payable: "মোট পরিশোধযোগ্য কোর্স ফি:",
+                select_pay_method: "পেমেন্ট মাধ্যম নির্বাচন করুন *",
                 select_option: "নির্বাচন করুন",
                 txid: "ট্রানজেকশন আইডি (TxID) *",
-                submit_req: "ক্রয় সম্পন্ন করার অনুরোধ পাঠান",
-                chatbot_title: "লাইভ টক বট",
+                submit_req: "ভর্তির আবেদন সম্পন্ন করুন",
+                chatbot_title: "লাইভ চ্যাট অ্যাসিস্ট্যান্ট",
                 online_assist: "অনлайн অ্যাসিস্ট্যান্ট",
-                bot_welcome: "হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন সিলেক্ট করুন।",
-                select_question_helper: "প্রশ্ন সিলেক্ট করুন (ডান-বামে স্ক্রল হবে):",
+                bot_welcome: "হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন নির্বাচন করুন।",
+                select_question_helper: "প্রশ্ন নির্বাচন করুন (ডান-বামে স্ক্রল করতে পারেন):",
                 cancel_search: "বন্ধ করুন"
             },
             en: {
                 welcome_title: "Welcome to Our Platform",
-                welcome_bio: "Choose your favorite course and services from our expert curated listing.",
+                welcome_bio: "Explore our premium courses and select the one that fits your goals.",
                 available_courses: "Available Courses",
                 courses_loading: "Loading courses...",
-                trending_courses: "Today's Trending Courses",
+                trending_courses: "Trending Courses",
                 no_trending: "No trending courses available right now.",
-                admin_contact: "Admin Contact Information",
+                admin_contact: "Admin Contacts & Services",
                 loading: "Loading...",
-                settings: "Settings",
+                settings: "System Settings",
                 theme_mode: "Theme Mode",
                 theme_desc: "Toggle between Dark and Light theme",
                 theme_toggle_btn: currentTheme === 'dark' ? "Light Mode" : "Dark Mode",
@@ -643,31 +650,31 @@
                 nav_trending: "Trending",
                 nav_contact: "Contact",
                 nav_settings: "Settings",
-                buy_now: "Buy Course",
+                buy_now: "Enroll Now",
                 duration: "Duration",
                 time: "Time",
-                fee: "Course Fee",
-                rules_title: "Important Rules",
-                personal_info: "Provide Your Personal Information",
-                full_name: "Your Full Name *",
+                fee: "Fee",
+                rules_title: "Important Guidelines",
+                personal_info: "Your Personal Information",
+                full_name: "Full Name *",
                 whatsapp_no: "Active WhatsApp Number *",
                 email_addr: "Active Email Address *",
-                address: "Current Address (Brief) *",
-                age: "Your Age (Years) *",
-                experience: "Online Work Experience (Years) *",
+                address: "Current Address *",
+                age: "Age (Years) *",
+                experience: "Work Experience (Years) *",
                 pay_course_fee: "Pay the Course Fee",
                 admin_nums: "Admin's Payment Numbers:",
-                rules_special: "Special Payment Instructions:",
-                total_payable: "Total Payable Fee:",
+                rules_special: "Payment Guidelines:",
+                total_payable: "Total Payable Course Fee:",
                 select_pay_method: "Select Payment Method *",
                 select_option: "Choose Method",
                 txid: "Transaction ID (TxID) *",
-                submit_req: "Submit Purchase Request",
-                chatbot_title: "Live Talk Bot",
+                submit_req: "Submit Enrollment Application",
+                chatbot_title: "Live Chat Assistant",
                 online_assist: "Online Assistant",
-                bot_welcome: "Hello! Welcome to our platform. How can I help you? Select any question below.",
-                select_question_helper: "Select a question (scrolls left-to-right):",
-                cancel_search: "Cancel"
+                bot_welcome: "Hello! Welcome to our platform. How can I help you today? Please choose a question from below.",
+                select_question_helper: "Select a question (scroll horizontally):",
+                cancel_search: "Close"
             }
         };
 
@@ -889,6 +896,7 @@
             }
         }
 
+        // Success state for copy mechanism
         function showSuccessState(buttonEl) {
             const icon = buttonEl.querySelector('i');
             if (!icon) return;
@@ -943,7 +951,7 @@
                 if (!isDragging) {
                     if (Math.hypot(dx, dy) > dragThreshold) {
                         isDragging = true;
-                        botBtn.classList.remove('bottom-24', 'right-6');
+                        botBtn.classList.remove('bottom-24', 'md:bottom-28', 'right-6', 'md:right-8');
                         botBtn.style.setProperty('bottom', 'auto', 'important');
                         botBtn.style.setProperty('right', 'auto', 'important');
                     }
@@ -997,9 +1005,19 @@
                     
                     if (currentLang === 'bn') {
                         document.getElementById('hero-title').innerText = data.siteName || "স্বাগতম আমাদের প্ল্যাটফর্মে";
-                        document.getElementById('site-bio').innerText = data.bio || "আমাদের কোর্স এবং গিগগুলো দেখে আপনার পছন্দেরটি বেছে নিন।";
+                        document.getElementById('site-bio').innerText = data.bio || "আমাদের মানসম্মত কোর্স ও সার্ভিসগুলো দেখে আপনার প্রয়োজনীয়টি নির্বাচন করুন।";
                     }
                     
+                    // Admin Cover Banner direct URL binding support
+                    const heroCover = document.getElementById('hero-cover');
+                    if (heroCover) {
+                        if (data.coverUrl) {
+                            heroCover.style.backgroundImage = `url('${data.coverUrl}')`;
+                        } else {
+                            heroCover.style.backgroundImage = 'none';
+                        }
+                    }
+
                     document.getElementById('site-rules').innerText = data.rules || "কোনো নিয়মাবলী যুক্ত করা হয়নি।";
                     
                     if (data.logoUrl) {
@@ -1035,7 +1053,7 @@
                 let hasTrending = false;
                 
                 const dayMap = currentLang === 'bn' ? {
-                    'sat': 'শনি', 'sun': 'রবি', 'mon': 'সোম', 'tue': 'মঙ্গল', 'wed': 'বুধ', 'thu': 'বৃহঃ', 'fri': 'শুক্র'
+                    'sat': 'শনি', 'sun': 'রবি', 'mon': 'সোম', 'tue': 'মঙ্গল', 'wed': 'বুধ', 'thu': 'বৃহস্পতি', 'fri': 'শুক্র'
                 } : {
                     'sat': 'Sat', 'sun': 'Sun', 'mon': 'Mon', 'tue': 'Tue', 'wed': 'Wed', 'thu': 'Thu', 'fri': 'Fri'
                 };
@@ -1058,12 +1076,12 @@
                         .filter(Boolean)
                         .join(', ');
 
-                    // HIGHLY VISIBLE SLASHED ORIGINAL PRICE BADGE
+                    // HIGHLY VISIBLE SLASHED PRICE BADGE (Adjusted to say "মুল্য", made slightly larger, and thinner strikethrough line)
                     const hasDiscount = course.discountPrice && parseInt(course.discountPrice) < parseInt(course.price);
                     const priceDisplay = hasDiscount 
                         ? `<div class="flex flex-wrap items-center gap-2">
-                            <span class="text-sm md:text-base font-black text-rose-500 dark:text-rose-400 line-through decoration-rose-600 dark:decoration-rose-500 decoration-2 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md shadow-sm border border-rose-100 dark:border-rose-900/20 mr-1 flex items-center gap-1">
-                                <span class="text-[10px] uppercase font-bold tracking-wider text-rose-600 dark:text-rose-400 opacity-75">${currentLang === 'bn' ? 'পূর্বের মূল্য: ' : 'Was: '}</span>
+                            <span class="text-base md:text-lg font-bold text-rose-500 dark:text-rose-400 line-through decoration-rose-500 dark:decoration-rose-400 decoration-[1px] bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md shadow-sm border border-rose-100 dark:border-rose-900/20 mr-1 flex items-center gap-1">
+                                <span class="text-xs uppercase font-bold tracking-wider text-rose-600 dark:text-rose-400 opacity-75">${currentLang === 'bn' ? 'মূল্য: ' : 'Price: '}</span>
                                 ৳${course.price}
                             </span>
                             <span class="text-emerald-500 dark:text-emerald-400 font-extrabold text-2xl md:text-3xl tracking-tight">৳${course.discountPrice}</span>
@@ -1149,7 +1167,7 @@
                             <div>
                                 <span class="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${labelText}</span>
                                 <h3 class="font-bold text-slate-900 dark:text-slate-100 mt-3 mb-1.5 leading-snug">${gig.workType || 'কাজের বিবরণী'}</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-400"></i> ${providerText}: ${gig.adminName || 'Pedmin'}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-400"></i> ${providerText}: ${gig.adminName || 'Admin'}</p>
                             </div>
                             <div class="flex flex-col gap-2 pt-4 border-t border-slate-50 dark:border-slate-700 text-xs">
                                 <a href="tel:${gig.contactNo}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2.5 py-1 transition">

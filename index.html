@@ -85,6 +85,8 @@
         html.dark #rules-modal > div,
         html.dark #enroll-modal > div,
         html.dark #chatbot-modal > div,
+        html.dark #seminar-promo-modal > div,
+        html.dark #seminar-reg-modal > div,
         html.dark .course-card-item {
             background-color: #1e293b !important; /* slate-800 */
             color: #f1f5f9 !important;
@@ -218,17 +220,12 @@
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative overflow-hidden">
             <div class="flex items-center space-x-2 md:space-x-3">
                 <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo" class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover ring-4 ring-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                <span id="site-name" class="text-lg md:text-xl font-black bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-sm">লোড হচ্ছে...</span>
+                <span id="site-name" class="text-lg md:text-xl font-black bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-sm" data-translate="loading">লোড হচ্ছে...</span>
             </div>
             <div class="flex items-center space-x-2">
                 <!-- Search Icon Button -->
-                <button onclick="toggleSearch(true)" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 p-2 text-xl transition-all duration-150 focus:outline-none flex items-center justify-center" title="অনুসন্ধান">
+                <button onclick="toggleSearch(true)" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 p-2 text-xl transition-all duration-150 focus:outline-none flex items-center justify-center" data-translate-title="search_btn_title" title="অনুসন্ধান">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-                <!-- Red Rules Info Button (Highlighted strictly in Red) -->
-                <button onclick="openRulesModal()" class="text-red-500 hover:text-red-600 p-2 text-2xl transition-all duration-150 hover:scale-110 active:scale-95 focus:outline-none flex items-center justify-center" title="জরুরী নিয়মাবলী">
-                    <i class="fa-solid fa-circle-info animate-pulse"></i>
                 </button>
             </div>
 
@@ -296,55 +293,256 @@
         </main>
     </div>
 
-    <!-- SPA VIEW: ADMIN CONTACT PAGE -->
-    <div id="view-admin-contact" class="spa-view hidden">
-        <main class="max-w-7xl mx-auto px-4 py-12 w-full">
-            <div class="mb-16">
-                <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
-                    <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-user-tie"></i></span> 
-                    <span data-translate="admin_contact">অ্যাডমিন পরিচিতি ও যোগাযোগ</span>
-                </h2>
-                <div id="admin-info-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    <p class="text-gray-400 col-span-full text-center py-12" data-translate="loading">লোড হচ্ছে...</p>
+    <!-- SPA VIEW: FREE SEMINAR PAGE (Tracking is completely moved out from here to the settings menu) -->
+    <div id="view-seminar" class="spa-view hidden">
+        <main class="max-w-4xl mx-auto px-4 py-12 w-full space-y-12">
+            <!-- Dynamic Seminar Interactive Banner Layout -->
+            <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-3xl p-6 md:p-10 text-white relative overflow-hidden shadow-xl">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_50%)]"></div>
+                <div class="relative z-10 space-y-4 max-w-2xl">
+                    <span class="bg-emerald-400 text-slate-950 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-gift animate-pulse"></i>
+                        <span data-translate="nav_seminar">ফ্রি সেমিনার</span>
+                    </span>
+                    <h2 id="seminar-view-title" class="text-2xl md:text-3xl font-black leading-tight">স্পেশাল ফ্রি সেমিনার</h2>
+                    <p id="seminar-view-desc" class="text-slate-100 text-xs md:text-sm leading-relaxed font-semibold">আমাদের ক্যারিয়ার গাইডলাইন সেমিনারে জয়েন করে নিজের স্কিল ডেভেলপমেন্ট শুরু করুন।</p>
+                    
+                    <div class="flex flex-wrap gap-3 text-xs pt-2">
+                        <div class="bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+                            <i class="fa-regular fa-calendar-days text-emerald-300"></i>
+                            <span id="seminar-view-days" class="font-bold">শুক্রবার বা মঙ্গলবার</span>
+                        </div>
+                        <div class="bg-white/15 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10 flex items-center gap-2">
+                            <i class="fa-regular fa-clock text-emerald-300"></i>
+                            <span id="seminar-view-time" class="font-bold">রাত ৯:৩০</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button onclick="openSeminarRegModal()" class="bg-white text-emerald-700 hover:bg-slate-100 font-extrabold py-3 px-6 rounded-xl text-sm transition shadow-lg transition-transform active:scale-95">
+                            <span data-translate="register_now">নিবন্ধন করুন</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beautiful Minimalist Highlights Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex items-start gap-4">
+                    <span class="p-3 bg-emerald-500/10 rounded-xl text-emerald-500"><i class="fa-solid fa-circle-check text-lg"></i></span>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-1" data-translate="sem_h1_title">সরাসরি প্রশ্নোত্তরের সুযোগ</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" data-translate="sem_h1_desc">মেন্টরের সাথে সরাসরি কথা বলে ক্যারিয়ার নিয়ে আপনার সকল প্রশ্নের উত্তর জেনে নিন।</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex items-start gap-4">
+                    <span class="p-3 bg-emerald-500/10 rounded-xl text-emerald-500"><i class="fa-solid fa-road text-lg"></i></span>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-1" data-translate="sem_h2_title">ক্যারিয়ার রোডম্যাপ</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" data-translate="sem_h2_desc">শূণ্য থেকে শুরু করে প্রফেশনাল হওয়া পর্যন্ত পূর্ণাঙ্গ গাইডলাইন পাবেন।</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex items-start gap-4">
+                    <span class="p-3 bg-emerald-500/10 rounded-xl text-emerald-500"><i class="fa-solid fa-users text-lg"></i></span>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 mb-1" data-translate="sem_h3_title">স্পেশাল নেটওয়ার্কিং কমিউনিটি</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" data-translate="sem_h3_desc">সমমনা মানুষদের সাথে একসাথে শেখার জন্য গ্রুপ এক্সেস পাবেন সম্পূর্ণ ফ্রিতে।</p>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- SPA VIEW: SETTINGS PAGE -->
+    <!-- SPA VIEW: MENU / SETTINGS PAGE (Perfectly Integrated Settings, Tracking system, Rules, & Contact) -->
     <div id="view-settings" class="spa-view hidden">
-        <main class="max-w-2xl mx-auto px-4 py-12 w-full">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-8">
-                <h2 class="text-xl md:text-2xl font-bold text-slate-900 border-b pb-3 flex items-center gap-3">
-                    <span class="p-2 bg-slate-100 rounded-lg text-slate-600"><i class="fa-solid fa-gears"></i></span> 
-                    <span data-translate="settings">সিস্টেম সেটিংস</span>
-                </h2>
+        <main class="max-w-4xl mx-auto px-4 py-8 md:py-12 w-full space-y-8">
+            
+            <!-- Dynamic Menu Header Block -->
+            <div class="flex items-center gap-3 border-b pb-4 border-slate-200 dark:border-slate-700">
+                <span class="p-3 bg-emerald-500/10 rounded-xl text-emerald-500 text-xl"><i class="fa-solid fa-bars"></i></span>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100" data-translate="nav_settings">মেনু ও সেটিংস</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" data-translate="menu_subtitle">পদ্ধতি পরিবর্তন, ট্র্যাকিং, নিয়মাবলী ও যোগাযোগ মাধ্যম</p>
+                </div>
+            </div>
 
-                <!-- Theme Toggle -->
-                <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
-                    <div class="space-y-0.5">
-                        <h3 class="font-bold text-sm text-slate-900" data-translate="theme_mode">থিম পরিবর্তন (Theme Mode)</h3>
-                        <p class="text-xs text-slate-500" data-translate="theme_desc">লাইট বা ডার্ক মোডে পরিবর্তন করুন</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Settings Configuration & Rules Alert Card -->
+                <div class="lg:col-span-1 space-y-6">
+                    
+                    <!-- Settings Box -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-5 space-y-5">
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 border-b pb-2 border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-emerald-500"></i>
+                            <span data-translate="settings">সিস্টেম সেটিংস</span>
+                        </h3>
+
+                        <!-- Theme Selection -->
+                        <div class="flex items-center justify-between p-3 bg-slate-50/75 dark:bg-slate-900/50 rounded-xl border border-slate-100/50 dark:border-slate-800">
+                            <div class="space-y-0.5">
+                                <h4 class="font-bold text-xs text-slate-900 dark:text-slate-100" data-translate="theme_mode">থিম পরিবর্তন</h4>
+                                <p class="text-[9px] text-slate-500 dark:text-slate-400" data-translate="theme_desc">লাইট বা ডার্ক মোডে পরিবর্তন করুন</p>
+                            </div>
+                            <button onclick="toggleTheme()" class="premium-btn-gradient text-white font-bold py-2 px-3 rounded-xl text-[10px] transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-circle-half-stroke"></i>
+                                <span id="theme-btn-text" data-translate="theme_toggle_btn">ডার্ক মোড</span>
+                            </button>
+                        </div>
+
+                        <!-- Language Selection -->
+                        <div class="flex items-center justify-between p-3 bg-slate-50/75 dark:bg-slate-900/50 rounded-xl border border-slate-100/50 dark:border-slate-800">
+                            <div class="space-y-0.5">
+                                <h4 class="font-bold text-xs text-slate-900 dark:text-slate-100" data-translate="lang_mode">ভাষা পরিবর্তন</h4>
+                                <p class="text-[9px] text-slate-500 dark:text-slate-400" data-translate="lang_desc">পছন্দসই ভাষা নির্বাচন করুন</p>
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="switchLanguage('bn')" id="lang-bn" class="premium-btn-gradient text-white font-bold py-1.5 px-2 rounded-lg text-[10px] transition border border-transparent">বাংলা</button>
+                                <button onclick="switchLanguage('en')" id="lang-en" class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-1.5 px-2 rounded-lg text-[10px] transition border border-transparent">EN</button>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="toggleTheme()" class="premium-btn-gradient text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-2">
-                        <i class="fa-solid fa-circle-half-stroke"></i>
-                        <span id="theme-btn-text" data-translate="theme_toggle_btn">ডার্ক মোড</span>
-                    </button>
+
+                    <!-- Rules Emergency Red Alert Block (Relocated successfully from header dot button) -->
+                    <div class="bg-red-50/65 dark:bg-red-950/20 rounded-2xl shadow-sm border border-red-200 dark:border-red-900/40 p-5 space-y-4">
+                        <div class="flex items-center gap-2 text-red-600 dark:text-red-400">
+                            <i class="fa-solid fa-circle-info text-lg animate-pulse"></i>
+                            <h3 class="font-bold text-sm" data-translate="rules_title">জরুরী নিয়মাবলী</h3>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-semibold">
+                            ভর্তির পূর্বে ও যেকোনো লেনদেন করার আগে অবশ্যই আমাদের প্ল্যাটফর্মের জরুরি নিয়মাবলী দেখে নিন।
+                        </p>
+                        <button onclick="openRulesModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-150 flex items-center justify-center gap-2 shadow-md shadow-red-500/20">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span data-translate="view_rules">নিয়মাবলী দেখুন</span>
+                        </button>
+                    </div>
+
                 </div>
 
-                <!-- Language Toggle -->
-                <div class="flex items-center justify-between p-4 bg-slate-50/75 rounded-xl border border-slate-100/50">
-                    <div class="space-y-0.5">
-                        <h3 class="font-bold text-sm text-slate-900" data-translate="lang_mode">ভাষা পরিবর্তন (Language)</h3>
-                        <p class="text-xs text-slate-500" data-translate="lang_desc">পছন্দসই ভাষা (বাংলা/ইংরেজি) নির্বাচন করুন</p>
+                <!-- Right Column: Tracking & Contact Administration -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Search Status Verification Box (Moved from seminar page) -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 space-y-4">
+                        <div class="flex items-center gap-3 border-b pb-3 border-slate-100 dark:border-slate-700">
+                            <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-clipboard-check text-lg"></i></span>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100" data-translate="track_title">আবেদন ও পেমেন্ট যাচাই করুন</h3>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" data-translate="track_desc">হোয়াটসঅ্যাপ নম্বর দিয়ে আপনার আবেদনের অগ্রগতি খুঁজুন।</p>
+                        
+                        <div class="flex gap-2">
+                            <input type="tel" id="status-search-phone" placeholder="017XXXXXXXX" class="flex-grow rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-3 outline-none text-sm focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition">
+                            <!-- Clean icon-only search button as requested -->
+                            <button onclick="searchRegistrationStatus()" class="premium-btn-gradient text-white px-5 rounded-xl flex items-center justify-center shrink-0 transition-transform active:scale-95" data-translate-title="search_btn_title" title="খুঁজুন">
+                                <i class="fa-solid fa-magnifying-glass text-base"></i>
+                            </button>
+                        </div>
+                        <div id="status-results-container" class="space-y-3 pt-2 no-scrollbar max-h-[220px] overflow-y-auto">
+                            <p class="text-center text-slate-400 dark:text-slate-500 text-xs py-2" data-translate="search_helper">নম্বর দিয়ে খুঁজুন...</p>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="switchLanguage('bn')" id="lang-bn" class="premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent">বাংলা</button>
-                        <button onclick="switchLanguage('en')" id="lang-en" class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent">English</button>
+
+                    <!-- Admin Contacts Card Box (Successfully integrated inside the settings menu) -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 space-y-4">
+                        <div class="flex items-center gap-3 border-b pb-3 border-slate-100 dark:border-slate-700">
+                            <span class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500"><i class="fa-solid fa-user-tie text-lg"></i></span>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100" data-translate="admin_contact">অ্যাডমিন পরিচিতি ও যোগাযোগ</h3>
+                        </div>
+                        <div id="admin-info-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <p class="text-gray-400 col-span-full text-center py-6 text-xs" data-translate="loading">লোড হচ্ছে...</p>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Seminar Promo / Banner Modal (Loads on entry) -->
+    <div id="seminar-promo-modal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 transform transition-all flex flex-col">
+            <div class="relative">
+                <img id="promo-seminar-img" src="https://via.placeholder.com/600x300?text=Free+Seminar" alt="Seminar Image" class="w-full h-48 md:h-56 object-cover">
+                <button onclick="closeSeminarPromoModal()" class="absolute top-3 right-3 bg-slate-900/60 hover:bg-slate-900/80 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl transition shadow focus:outline-none leading-none">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="bg-emerald-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm"><i class="fa-solid fa-gift animate-pulse"></i> <span data-translate="nav_seminar">ফ্রি সেমিনার</span></span>
+                </div>
+                <h3 id="promo-seminar-title" class="text-lg md:text-xl font-black text-slate-900 leading-snug">স্পেশাল ফ্রি সেমিনার</h3>
+                <p id="promo-seminar-desc" class="text-xs md:text-sm text-slate-600 leading-relaxed font-semibold">আমাদের ক্যারিয়ার গাইডলাইন সেমিনারে জয়েন করে নিজের স্কিল ডেভেলপমেন্ট শুরু করুন।</p>
+                
+                <div class="p-3.5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 text-xs flex flex-col gap-1">
+                    <span id="promo-seminar-schedule" class="font-bold text-slate-700 dark:text-slate-300">সময়: রাত ৯:৩০</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="closeSeminarPromoModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 font-bold py-3 px-4 rounded-xl text-xs transition text-center">
+                        <span data-translate="cancel_search">বন্ধ করুন</span>
+                    </button>
+                    <button onclick="openSeminarRegModalFromPromo()" class="w-full premium-btn-gradient text-white font-bold py-3 px-4 rounded-xl text-xs transition text-center shadow-lg shadow-emerald-500/20">
+                        <span data-translate="register_now">নিবন্ধন করুন</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seminar Registration Form Modal -->
+    <div id="seminar-reg-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-5 md:p-6 relative my-auto border border-slate-100 flex flex-col max-h-[96vh]">
+            <button onclick="closeSeminarRegModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl transition p-1 leading-none">&times;</button>
+            
+            <div class="border-b border-slate-100 pb-4 pr-6">
+                <h3 class="text-lg md:text-xl font-black text-slate-900" id="seminar-reg-title" data-translate="seminar_reg_heading">ফ্রি সেমিনার রেজিস্ট্রেশন</h3>
+            </div>
+            
+            <form id="seminar-reg-form" onsubmit="submitSeminarRegistration(event)" class="overflow-y-auto pr-1 flex-grow space-y-4 mt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="full_name">সম্পূর্ণ নাম *</label>
+                    <input type="text" id="seminar-user-name" required placeholder="উদাহরণ: মো: আব্দুল্লাহ আল মামুন" class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="gender_label">লিঙ্গ *</label>
+                        <select id="seminar-user-gender" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                            <option value="" data-translate="select_option">নির্বাচন করুন</option>
+                            <option value="Male" data-translate="gender_male">পুরুষ</option>
+                            <option value="Female" data-translate="gender_female">মহিলা</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="age">বয়স (বছর) *</label>
+                        <input type="number" id="seminar-user-age" min="5" max="100" placeholder="যেমন: ২২" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="whatsapp_no">সক্রিয় হোয়াটসঅ্যাপ নম্বর *</label>
+                    <input type="tel" id="seminar-user-whatsapp" placeholder="017XXXXXXXX" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="preferred_day_label">পছন্দের দিন *</label>
+                        <select id="seminar-user-day" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
+                            <option value="" data-translate="select_option">নির্বাচন করুন</option>
+                            <option value="Friday" data-translate="day_friday">শুক্রবার</option>
+                            <option value="Tuesday" data-translate="day_tuesday">মঙ্গলবার</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="time_auto_label">সময় (অটোমেটিক)</label>
+                        <input type="text" id="seminar-user-time" disabled value="রাত ৯:৩০" class="w-full rounded-lg border-slate-200 bg-slate-50 shadow-sm p-3 border text-sm text-slate-500 font-bold dark:bg-slate-900/60">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full premium-btn-gradient text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 text-sm shadow-lg shadow-emerald-500/20" data-translate="submit_req_seminar">
+                    আবেদন সম্পন্ন করুন
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Rules Modal -->
@@ -355,7 +553,7 @@
                 <span class="p-2 bg-red-50 rounded-lg text-red-500"><i class="fa-solid fa-circle-info text-xl"></i></span>
                 <h3 class="text-lg font-black text-slate-900 text-red-600" data-translate="rules_title">জরুরী নিয়মাবলী</h3>
             </div>
-            <div class="text-slate-600 text-sm leading-relaxed max-h-[60vh] overflow-y-auto whitespace-pre-wrap font-bold" id="site-rules">
+            <div class="text-slate-600 text-sm leading-relaxed max-h-[60vh] overflow-y-auto whitespace-pre-wrap font-bold" id="site-rules" data-translate="loading_rules">
                 নিয়মাবলী লোড হচ্ছে...
             </div>
         </div>
@@ -377,7 +575,7 @@
                 <!-- Step 1: User Info -->
                 <div class="space-y-4">
                     <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">১</span>
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs" data-translate="step_1">১</span>
                         <span data-translate="personal_info">আপনার ব্যক্তিগত তথ্য</span>
                     </h4>
                     
@@ -408,7 +606,7 @@
                             <input type="number" id="user-age" min="5" max="100" placeholder="যেমন: ২২" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="experience">অনলাইন কাজের অভিজ্ঞতা (বছর) *</label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="experience">অন্যান্য কাজের অভিজ্ঞতা (বছর) *</label>
                             <input type="number" id="user-exp" min="0" max="50" placeholder="না থাকলে 0 লিখুন" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                         </div>
                     </div>
@@ -417,7 +615,7 @@
                 <!-- Step 2: Payment -->
                 <div class="space-y-4">
                     <h4 class="font-bold text-emerald-600 border-b pb-1 text-sm flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs">২</span>
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 inline-flex items-center justify-center text-xs" data-translate="step_2">২</span>
                         <span data-translate="pay_course_fee">কোর্স ফি প্রদান করুন</span>
                     </h4>
                     
@@ -430,7 +628,7 @@
                                 <span class="font-semibold text-slate-700 dark:text-slate-300">বিকাশ (Personal):</span>
                                 <div class="flex items-center gap-2">
                                     <span id="admin-bkash" class="font-mono font-bold">N/A</span>
-                                    <button type="button" onclick="copyToClipboard('admin-bkash', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                    <button type="button" onclick="copyToClipboard('admin-bkash', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" data-translate-title="copy_tooltip" title="কপি করুন">
                                         <i class="fa-regular fa-copy text-emerald-500"></i>
                                     </button>
                                 </div>
@@ -439,7 +637,7 @@
                                 <span class="font-semibold text-slate-700 dark:text-slate-300">নগদ (Personal):</span>
                                 <div class="flex items-center gap-2">
                                     <span id="admin-nagad" class="font-mono font-bold">N/A</span>
-                                    <button type="button" onclick="copyToClipboard('admin-nagad', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                    <button type="button" onclick="copyToClipboard('admin-nagad', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" data-translate-title="copy_tooltip" title="কপি করুন">
                                         <i class="fa-regular fa-copy text-emerald-500"></i>
                                     </button>
                                 </div>
@@ -448,7 +646,7 @@
                                 <span class="font-semibold text-slate-700 dark:text-slate-300">রকেট (Personal):</span>
                                 <div class="flex items-center gap-2">
                                     <span id="admin-rocket" class="font-mono font-bold">N/A</span>
-                                    <button type="button" onclick="copyToClipboard('admin-rocket', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" title="কপি করুন">
+                                    <button type="button" onclick="copyToClipboard('admin-rocket', this)" class="text-emerald-600 hover:text-emerald-800 p-1 flex items-center justify-center transition hover:scale-105" data-translate-title="copy_tooltip" title="কপি করুন">
                                         <i class="fa-regular fa-copy text-emerald-500"></i>
                                     </button>
                                 </div>
@@ -476,9 +674,9 @@
                             <label class="block text-xs font-semibold text-slate-700 mb-1" data-translate="select_pay_method">পেমেন্ট মাধ্যম নির্বাচন করুন *</label>
                             <select id="payment-method" required class="w-full rounded-lg border-slate-200 shadow-sm p-3 border focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none text-sm transition">
                                 <option value="" data-translate="select_option">নির্বাচন করুন</option>
-                                <option value="bKash">bKash (বিকাশ)</option>
-                                <option value="Nagad">Nagad (নগদ)</option>
-                                <option value="Rocket">Rocket (রকেট)</option>
+                                <option value="bKash" data-translate="pay_bkash">bKash (বিকাশ)</option>
+                                <option value="Nagad" data-translate="pay_nagad">Nagad (নগদ)</option>
+                                <option value="Rocket" data-translate="pay_rocket">Rocket (রকেট)</option>
                             </select>
                         </div>
                         <div>
@@ -496,8 +694,8 @@
     </div>
 
     <!-- Draggable Live Talk Bot Button -->
-    <div id="floating-bot-btn" class="fixed bottom-24 md:bottom-28 right-6 md:right-8 z-40 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 text-white w-14 h-14 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-300/30 flex items-center justify-center transition-transform active:scale-95 select-none touch-none cursor-grab active:cursor-grabbing">
-        <div class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-25"></div>
+    <div id="floating-bot-btn" class="fixed bottom-24 md:bottom-28 right-6 md:right-8 z-40 bg-gradient-to-br from-orange-400 via-orange-500 to-amber-600 text-white w-14 h-14 rounded-full shadow-[0_0_20px_rgba(249,115,22,0.5)] border border-orange-300/30 flex items-center justify-center transition-transform active:scale-95 select-none touch-none cursor-grab active:cursor-grabbing">
+        <div class="absolute inset-0 rounded-full bg-orange-400 animate-ping opacity-25"></div>
         <i class="fa-solid fa-robot text-2xl relative z-10"></i>
     </div>
 
@@ -540,8 +738,8 @@
         </div>
     </div>
 
-    <!-- Sticky Bottom Navigation Bar (Sleek floating capsule dock in large screens) -->
-    <div class="bottom-nav fixed bottom-0 md:bottom-6 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t md:border border-slate-100 dark:border-slate-700 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:shadow-[0_10px_30px_rgba(0,0,0,0.15)] z-40 py-2.5 px-6 flex justify-around items-center max-w-lg mx-auto rounded-t-2xl md:rounded-full transition-all duration-300">
+    <!-- Sticky Bottom Navigation Bar (Sleek floating capsule dock in large screens - Icon edited to 3-line Menu) -->
+    <div class="bottom-nav fixed bottom-0 md:bottom-6 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t md:border border-slate-100 dark:border-slate-700 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:shadow-[0_10px_30px_rgba(0,0,0,0.15)] z-40 py-2.5 px-4 flex justify-around items-center max-w-lg mx-auto rounded-t-2xl md:rounded-full transition-all duration-300">
         <button id="nav-btn-home" onclick="navigateTo('view-home')" class="flex flex-col items-center justify-center gap-1 text-emerald-500 font-extrabold drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] transition duration-150">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] font-bold" data-translate="nav_home">হোম</span>
@@ -550,13 +748,14 @@
             <i class="fa-solid fa-fire text-lg"></i>
             <span class="text-[10px] font-bold" data-translate="nav_trending">ট্রেন্ডিং</span>
         </button>
-        <button id="nav-btn-admin-contact" onclick="navigateTo('view-admin-contact')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
-            <i class="fa-solid fa-id-card text-lg"></i>
-            <span class="text-[10px] font-bold" data-translate="nav_contact">যোগাযোগ</span>
+        <button id="nav-btn-seminar" onclick="navigateTo('view-seminar')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
+            <i class="fa-solid fa-laptop-code text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_seminar">সেমিনার</span>
         </button>
+        <!-- Icon successfully updated to 3-line menu bar -->
         <button id="nav-btn-settings" onclick="navigateTo('view-settings')" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-emerald-500 transition duration-150">
-            <i class="fa-solid fa-gear text-lg"></i>
-            <span class="text-[10px] font-bold" data-translate="nav_settings">সেটিংস</span>
+            <i class="fa-solid fa-bars text-lg"></i>
+            <span class="text-[10px] font-bold" data-translate="nav_settings">মেনু</span>
         </button>
     </div>
 
@@ -596,20 +795,32 @@
                 admin_contact: "অ্যাডমিন পরিচিতি ও যোগাযোগ",
                 loading: "লোড হচ্ছে...",
                 settings: "সিস্টেম সেটিংস",
-                theme_mode: "থিম পরিবর্তন (Theme Mode)",
+                theme_mode: "থিম পরিবর্তন",
                 theme_desc: "লাইট বা ডার্ক মোডে পরিবর্তন করুন",
                 theme_toggle_btn: currentTheme === 'dark' ? "লাইট মোড" : "ডার্ক মোড",
-                lang_mode: "ভাষা পরিবর্তন (Language)",
-                lang_desc: "পছন্দসই ভাষা (বাংলা/ইংরেজি) নির্বাচন করুন",
+                lang_mode: "ভাষা পরিবর্তন",
+                lang_desc: "পছন্দসই ভাষা নির্বাচন করুন",
                 nav_home: "হোম",
                 nav_trending: "ট্রেন্ডিং",
-                nav_contact: "যোগাযোগ",
-                nav_settings: "সেটিংস",
+                nav_seminar: "ফ্রি সেমিনার",
+                nav_settings: "মেনু",
                 buy_now: "ভর্তি হোন",
+                register_now: "নিবন্ধন করুন",
                 duration: "মেয়াদ",
                 time: "সময়",
                 fee: "কোর্স ফি",
                 rules_title: "জরুরী নিয়মাবলী",
+                view_rules: "নিয়মাবলী দেখুন",
+                menu_subtitle: "সিস্টেম পরিবর্তন, ট্র্যাকিং, নিয়মাবলী ও যোগাযোগ মাধ্যম",
+                track_title: "আবেদন ও পেমেন্ট যাচাই করুন",
+                track_desc: "হোয়াটসঅ্যাপ নম্বর দিয়ে আপনার আবেদনের অগ্রগতি খুঁজুন।",
+                search_helper: "নম্বর দিয়ে খুঁজুন...",
+                sem_h1_title: "সরাসরি প্রশ্নোত্তরের সুযোগ",
+                sem_h1_desc: "মেন্টরের সাথে সরাসরি কথা বলে ক্যারিয়ার নিয়ে আপনার সকল প্রশ্নের উত্তর জেনে নিন।",
+                sem_h2_title: "ক্যারিয়ার রোডম্যাপ",
+                sem_h2_desc: "শূণ্য থেকে শুরু করে প্রফেশনাল হওয়া পর্যন্ত পূর্ণাঙ্গ গাইডলাইন পাবেন।",
+                sem_h3_title: "স্পেশাল নেটওয়ার্কিং কমিউনিটি",
+                sem_h3_desc: "সমমনা মানুষদের সাথে একসাথে শেখার জন্য গ্রুপ এক্সেস পাবেন সম্পূর্ণ ফ্রিতে।",
                 personal_info: "আপনার ব্যক্তিগত তথ্য",
                 full_name: "সম্পূর্ণ নাম *",
                 whatsapp_no: "সক্রিয় হোয়াটসঅ্যাপ নম্বর *",
@@ -626,10 +837,31 @@
                 txid: "ট্রানজেকশন আইডি (TxID) *",
                 submit_req: "ভর্তির আবেদন সম্পন্ন করুন",
                 chatbot_title: "লাইভ চ্যাট অ্যাসিস্ট্যান্ট",
-                online_assist: "অনлайн অ্যাসিস্ট্যান্ট",
+                online_assist: "অনলাইন অ্যাসিস্ট্যান্ট",
                 bot_welcome: "হ্যালো! আমাদের প্ল্যাটফর্মে আপনাকে স্বাগত জানাচ্ছি। আমি আপনাকে কীভাবে সাহায্য করতে পারি? নিচের যেকোনো প্রশ্ন নির্বাচন করুন।",
                 select_question_helper: "প্রশ্ন নির্বাচন করুন (ডান-বামে স্ক্রল করতে পারেন):",
-                cancel_search: "বন্ধ করুন"
+                cancel_search: "বন্ধ করুন",
+                
+                // নতুন অনুবাদ কি সমূহ (ভাষা মিক্সিং রোধে)
+                step_1: "১",
+                step_2: "২",
+                copy_tooltip: "কপি করুন",
+                copied_text: "কপি হয়েছে!",
+                gender_label: "লিঙ্গ *",
+                gender_male: "পুরুষ",
+                gender_female: "মহিলা",
+                preferred_day_label: "পছন্দের দিন *",
+                day_friday: "শুক্রবার",
+                day_tuesday: "মঙ্গলবার",
+                time_auto_label: "সময় (অটোমেটিক)",
+                submit_req_seminar: "আবেদন সম্পন্ন করুন",
+                seminar_reg_heading: "ফ্রি সেমিনার রেজিস্ট্রেশন",
+                pay_bkash: "bKash (বিকাশ)",
+                pay_nagad: "Nagad (নগদ)",
+                pay_rocket: "Rocket (রকেট)",
+                loading_rules: "নিয়মাবলী লোড হচ্ছে...",
+                no_questions: "কোনো প্রশ্ন যুক্ত করা হয়নি।",
+                search_btn_title: "অনুসন্ধান"
             },
             en: {
                 welcome_title: "Welcome to Our Platform",
@@ -641,20 +873,32 @@
                 admin_contact: "Admin Contacts & Services",
                 loading: "Loading...",
                 settings: "System Settings",
-                theme_mode: "Theme Mode",
-                theme_desc: "Toggle between Dark and Light theme",
+                theme_mode: "Theme Toggle",
+                theme_desc: "Switch light or dark mode",
                 theme_toggle_btn: currentTheme === 'dark' ? "Light Mode" : "Dark Mode",
                 lang_mode: "Change Language",
-                lang_desc: "Switch between Bengali and English",
+                lang_desc: "Select your preferred language",
                 nav_home: "Home",
                 nav_trending: "Trending",
-                nav_contact: "Contact",
-                nav_settings: "Settings",
+                nav_seminar: "Free Seminar",
+                nav_settings: "Menu",
                 buy_now: "Enroll Now",
+                register_now: "Register Now",
                 duration: "Duration",
                 time: "Time",
                 fee: "Fee",
-                rules_title: "Important Guidelines",
+                rules_title: "Important Rules",
+                view_rules: "View Guidelines",
+                menu_subtitle: "Toggle preferences, tracking, instructions & contact details",
+                track_title: "Verify Application & Payment",
+                track_desc: "Find registration progress using your WhatsApp number.",
+                search_helper: "Find with number...",
+                sem_h1_title: "Direct Q&A Sessions",
+                sem_h1_desc: "Talk directly with mentors to get answers to all your career questions.",
+                sem_h2_title: "Complete Career Roadmap",
+                sem_h2_desc: "Get full guideline step-by-step from beginner to professional level.",
+                sem_h3_title: "Special Networking Community",
+                sem_h3_desc: "Get free group access to learn together with like-minded people.",
                 personal_info: "Your Personal Information",
                 full_name: "Full Name *",
                 whatsapp_no: "Active WhatsApp Number *",
@@ -674,7 +918,28 @@
                 online_assist: "Online Assistant",
                 bot_welcome: "Hello! Welcome to our platform. How can I help you today? Please choose a question from below.",
                 select_question_helper: "Select a question (scroll horizontally):",
-                cancel_search: "Close"
+                cancel_search: "Close",
+                
+                // New translations to fix mixing
+                step_1: "1",
+                step_2: "2",
+                copy_tooltip: "Copy Number",
+                copied_text: "Copied!",
+                gender_label: "Gender *",
+                gender_male: "Male",
+                gender_female: "Female",
+                preferred_day_label: "Preferred Day *",
+                day_friday: "Friday",
+                day_tuesday: "Tuesday",
+                time_auto_label: "Time (Automatic)",
+                submit_req_seminar: "Submit Registration",
+                seminar_reg_heading: "Free Seminar Registration",
+                pay_bkash: "bKash",
+                pay_nagad: "Nagad",
+                pay_rocket: "Rocket",
+                loading_rules: "Loading rules...",
+                no_questions: "No questions added.",
+                search_btn_title: "Search"
             }
         };
 
@@ -730,8 +995,10 @@
             // Set current nav active
             const activeNavBtnId = 'nav-btn-' + viewId.replace('view-', '');
             const activeBtn = document.getElementById(activeNavBtnId);
-            activeBtn.classList.add('text-emerald-500', 'font-extrabold', 'drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]');
-            activeBtn.classList.remove('text-slate-500');
+            if (activeBtn) {
+                activeBtn.classList.add('text-emerald-500', 'font-extrabold', 'drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]');
+                activeBtn.classList.remove('text-slate-500');
+            }
 
             // Scroll smoothly to top when switching views
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -755,6 +1022,20 @@
                 }
             });
 
+            // Localized Dynamic Title Attributes (e.g. Copy Tooltips)
+            document.querySelectorAll('[data-translate-title]').forEach(el => {
+                const translationKey = el.getAttribute('data-translate-title');
+                if (i18n[lang][translationKey]) {
+                    el.setAttribute('title', i18n[lang][translationKey]);
+                }
+            });
+
+            // Handle default time input text translation
+            const seminarTimeInput = document.getElementById('seminar-user-time');
+            if (seminarTimeInput) {
+                seminarTimeInput.value = lang === 'bn' ? "রাত ৯:৩০" : "9:30 PM";
+            }
+
             // Language specific button visual state inside Settings View
             if (lang === 'bn') {
                 document.getElementById('lang-bn').className = "premium-btn-gradient text-white font-bold py-2 px-3 rounded-lg text-xs transition border border-transparent";
@@ -766,11 +1047,19 @@
             
             // Update placeholders dynamically based on language selection
             document.getElementById('search-input').placeholder = lang === 'bn' ? "কোর্স খুঁজুন..." : "Search courses...";
-            document.getElementById('user-name').placeholder = lang === 'bn' ? "উদাহরণ: মো: আব্দুল্লাহ আল মামুন" : "Example: John Doe";
+            document.getElementById('user-name').placeholder = lang === 'bn' ? "উদাহরণ: মো:মামুন" : "Example: John Doe";
             document.getElementById('user-address').placeholder = lang === 'bn' ? "গ্রাম/রোড, থানা, জেলা" : "City, Country";
             document.getElementById('user-age').placeholder = lang === 'bn' ? "যেমন: ২২" : "Ex: 22";
             document.getElementById('user-exp').placeholder = lang === 'bn' ? "না থাকলে 0 লিখুন" : "Ex: 2 (Write 0 if none)";
             document.getElementById('payment-txid').placeholder = lang === 'bn' ? "উদাহরণ: 9N5K7B4P" : "Ex: 9N5K7B4P";
+            
+            document.getElementById('seminar-user-name').placeholder = lang === 'bn' ? "উদাহরণ: মোঃ মামুন" : "Ex: John Doe";
+            document.getElementById('seminar-user-age').placeholder = lang === 'bn' ? "যেমন: ২২" : "Ex: 22";
+            document.getElementById('seminar-user-whatsapp').placeholder = lang === 'bn' ? "017XXXXXXXX" : "017XXXXXXXX";
+            document.getElementById('status-search-phone').placeholder = lang === 'bn' ? "017XXXXXXXX" : "017XXXXXXXX";
+            
+            // Render converted dynamic text for the seminar view
+            updateSeminarViewText();
         }
 
         // Theme Toggle Implementation
@@ -785,11 +1074,11 @@
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.body.classList.add('dark-mode');
-                if (btnText) btnText.innerText = currentLang === 'bn' ? "লাইট মোড" : "Light Mode";
+                if (btnText) btnText.innerText = currentLang === 'bn' ? "ডে মোড" : "Day Mode";
             } else {
                 document.documentElement.classList.remove('dark');
                 document.body.classList.remove('dark-mode');
-                if (btnText) btnText.innerText = currentLang === 'bn' ? "ডার্ক মোড" : "Dark Mode";
+                if (btnText) btnText.innerText = currentLang === 'bn' ? "নাইট মোড" : "Night Mode";
             }
         }
 
@@ -858,10 +1147,46 @@
             document.body.style.overflow = 'hidden';
         }
 
+        // Standard Rules close
         function closeRulesModal() {
             document.getElementById('rules-modal').classList.remove('flex');
             document.getElementById('rules-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        // Seminar Promo Modals Controls
+        function openSeminarPromoModal() {
+            document.getElementById('seminar-promo-modal').classList.remove('hidden');
+            document.getElementById('seminar-promo-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSeminarPromoModal() {
+            document.getElementById('seminar-promo-modal').classList.remove('flex');
+            document.getElementById('seminar-promo-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openSeminarRegModalFromPromo() {
+            closeSeminarPromoModal();
+            openSeminarRegModal();
+        }
+
+        function openSeminarRegModal() {
+            document.getElementById('seminar-reg-modal').classList.remove('hidden');
+            document.getElementById('seminar-reg-modal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Stubs kept to avoid code reference errors
+        function openStatusModal() {}
+        function closeStatusModal() {}
+
+        function closeSeminarRegModal() {
+            document.getElementById('seminar-reg-modal').classList.remove('flex');
+            document.getElementById('seminar-reg-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.getElementById('seminar-reg-form').reset();
         }
 
         // Hybrid Clipboard Copy Mechanism
@@ -896,13 +1221,20 @@
             }
         }
 
-        // Success state for copy mechanism
+        // Success state for copy mechanism with localized dynamic tooltips
         function showSuccessState(buttonEl) {
             const icon = buttonEl.querySelector('i');
             if (!icon) return;
             icon.className = 'fa-solid fa-circle-check text-emerald-500 animate-bounce';
+            
+            // Temporary Success Tooltip Visual State
+            const originalTitle = buttonEl.getAttribute('title') || (currentLang === 'bn' ? 'কপি করুন' : 'Copy Number');
+            const successTitle = i18n[currentLang].copied_text;
+            buttonEl.setAttribute('title', successTitle);
+
             setTimeout(() => {
                 icon.className = 'fa-regular fa-copy text-emerald-600';
+                buttonEl.setAttribute('title', originalTitle);
             }, 2000);
         }
 
@@ -992,6 +1324,47 @@
             botBtn.addEventListener('touchstart', onStart, { passive: true });
         }
 
+        // 1. Update Seminar View Text based on selected Language
+        function updateSeminarViewText() {
+            if (!globalSettings) return;
+            const data = globalSettings;
+            
+            let sName = data.seminarName || (currentLang === 'bn' ? "স্পেশাল ফ্রি সেমিনার" : "Special Free Seminar");
+            let sDesc = data.seminarDescription || (currentLang === 'bn' ? "আমাদের ক্যারিয়ার গাইডলাইন সেমিনারে জয়েন করে নিজের স্কিল ডেভেলপমেন্ট শুরু করুন।" : "Join our career guideline seminar to kickstart your journey.");
+            let sDays = data.seminarDays || (currentLang === 'bn' ? "শুক্রবার বা চক্রবার" : "Friday or Tuesday");
+            let sTime = data.seminarTime || "রাত ৯:৩০";
+
+            // If the user turned on English mode, translate basic dynamic values
+            if (currentLang === 'en') {
+                if (sName === "স্পেশাল ফ্রি সেমিনার") sName = "Special Free Seminar";
+                if (sDesc.includes("আমাদের ক্যারিয়ার গাইডলাইন")) sDesc = "Join our career guideline seminar to kickstart your journey.";
+                if (sDays.includes("শুক্রবার") || sDays.includes("মঙ্গলবার") || sDays.includes("বা")) {
+                    sDays = sDays.replace("শুক্রবার", "Friday").replace("মঙ্গলবার", "Tuesday");
+                }
+                if (sTime === "রাত ৯:৩০") sTime = "9:30 PM";
+            }
+
+            // Update Promo Banner DOM elements
+            const pTitle = document.getElementById('promo-seminar-title');
+            const pDesc = document.getElementById('promo-seminar-desc');
+            const pSchedule = document.getElementById('promo-seminar-schedule');
+
+            if (pTitle) pTitle.innerText = sName;
+            if (pDesc) pDesc.innerText = sDesc;
+            if (pSchedule) pSchedule.innerText = (currentLang === 'bn' ? `বার: ${sDays} | সময়: ${sTime}` : `Days: ${sDays} | Time: ${sTime}`);
+
+            // Update Free Seminar View Page elements dynamically
+            const sViewTitle = document.getElementById('seminar-view-title');
+            const sViewDesc = document.getElementById('seminar-view-desc');
+            const sViewDays = document.getElementById('seminar-view-days');
+            const sViewTime = document.getElementById('seminar-view-time');
+
+            if (sViewTitle) sViewTitle.innerText = sName;
+            if (sViewDesc) sViewDesc.innerText = sDesc;
+            if (sViewDays) sViewDays.innerText = (currentLang === 'bn' ? `বার: ${sDays}` : `Days: ${sDays}`);
+            if (sViewTime) sViewTime.innerText = (currentLang === 'bn' ? `সময়: ${sTime}` : `Time: ${sTime}`);
+        }
+
         // 1. Load Admin Settings
         function loadSettings() {
             database.ref('settings').on('value', (snapshot) => {
@@ -1006,6 +1379,9 @@
                     if (currentLang === 'bn') {
                         document.getElementById('hero-title').innerText = data.siteName || "স্বাগতম আমাদের প্ল্যাটফর্মে";
                         document.getElementById('site-bio').innerText = data.bio || "আমাদের মানসম্মত কোর্স ও সার্ভিসগুলো দেখে আপনার প্রয়োজনীয়টি নির্বাচন করুন।";
+                    } else {
+                        document.getElementById('hero-title').innerText = data.siteName || "Welcome to Our Platform";
+                        document.getElementById('site-bio').innerText = data.bio || "Explore our premium courses and select the one that fits your goals.";
                     }
                     
                     // Admin Cover Banner direct URL binding support
@@ -1028,6 +1404,15 @@
                     document.getElementById('admin-nagad').innerText = data.nagad || "N/A";
                     document.getElementById('admin-rocket').innerText = data.rocket || "N/A";
                     document.getElementById('admin-pay-instruction').innerText = data.paymentInstructions || "উপরে উল্লেখিত নম্বরে সঠিক মূল্য সেন্ড মানি করুন।";
+
+                    // Trigger Seminar Translation View Update
+                    updateSeminarViewText();
+
+                    // Auto load promo modal for the first entry
+                    if (!window.seminarPromoAutoShown) {
+                        openSeminarPromoModal();
+                        window.seminarPromoAutoShown = true;
+                    }
                 }
             });
         }
@@ -1066,7 +1451,7 @@
 
                     const isTrending = course.isTrending || false;
                     const durationText = currentLang === 'bn' ? 'মেয়াদ' : 'Duration';
-                    const timeText = currentLang === 'bn' ? 'সময়' : 'Time';
+                    const textTime = currentLang === 'bn' ? 'সময়' : 'Time';
                     const feeText = currentLang === 'bn' ? 'কোর্স ফি' : 'Fee';
                     const buyBtnText = currentLang === 'bn' ? 'কোর্সটি ক্রয় করুন' : 'Buy Course';
                     const classDaysText = currentLang === 'bn' ? 'ক্লাসের দিনসমূহ' : 'Class Days';
@@ -1076,7 +1461,7 @@
                         .filter(Boolean)
                         .join(', ');
 
-                    // HIGHLY VISIBLE SLASHED PRICE BADGE (Adjusted to say "মুল্য", made slightly larger, and thinner strikethrough line)
+                    // HIGHLY VISIBLE SLASHED PRICE BADGE
                     const hasDiscount = course.discountPrice && parseInt(course.discountPrice) < parseInt(course.price);
                     const priceDisplay = hasDiscount 
                         ? `<div class="flex flex-wrap items-center gap-2">
@@ -1092,22 +1477,21 @@
 
                     const cardHTML = `
                         <div data-title="${course.name || ''}" class="course-card-item bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group relative">
-                            <!-- Trending Indicator on card -->
-                            ${isTrending ? `<span class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider z-10 flex items-center gap-1 shadow"><i class="fa-solid fa-fire animate-pulse text-xs"></i> ${currentLang === 'bn' ? 'ট্রেন্ডিং' : 'Trending'}</span>` : ''}
-                            
                             <div class="relative overflow-hidden aspect-video">
                                 <img src="${course.bannerUrl || 'https://via.placeholder.com/400x200?text=No+Banner'}" alt="${course.name || ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent"></div>
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div class="space-y-3">
+                                    ${isTrending ? `<div class="flex"><span class="bg-amber-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm"><i class="fa-solid fa-fire animate-pulse text-xs"></i> ${currentLang === 'bn' ? 'ট্রেন্ডিং' : 'Trending'}</span></div>` : ''}
+                                    
                                     <h3 class="font-bold text-base md:text-lg text-slate-900 dark:text-slate-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">${course.name || ''}</h3>
                                     
                                     ${course.description ? `<p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-100/50 dark:border-slate-800">${course.description}</p>` : ''}
 
                                     <div class="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-1">
                                         <p class="flex items-center gap-2"><i class="fa-regular fa-clock text-emerald-500 dark:text-emerald-400"></i> ${durationText}: <span class="font-semibold">${course.duration || 'N/A'}</span></p>
-                                        <p class="flex items-center gap-2"><i class="fa-regular fa-calendar-days text-emerald-500 dark:text-emerald-400"></i> ${timeText}: <span class="font-semibold">${course.time || 'N/A'}</span></p>
+                                        <p class="flex items-center gap-2"><i class="fa-regular fa-calendar-days text-emerald-500 dark:text-emerald-400"></i> ${textTime}: <span class="font-semibold">${course.time || 'N/A'}</span></p>
                                         
                                         ${activeDaysTranslated ? `<p class="flex items-center gap-2"><i class="fa-solid fa-calendar-week text-emerald-500 dark:text-emerald-400"></i> ${classDaysText}: <span class="font-semibold">${activeDaysTranslated}</span> (${course.classDaysCount || '0'} ${currentLang === 'bn' ? 'দিন' : 'days'})</p>` : ''}
                                     </div>
@@ -1163,18 +1547,18 @@
                     const telegramText = currentLang === 'bn' ? 'টেলিগ্রাম' : 'Telegram';
 
                     const card = `
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 flex flex-col justify-between hover:shadow-lg transition duration-300">
+                        <div class="bg-white dark:bg-slate-850 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-4 flex flex-col justify-between hover:shadow-lg transition duration-300">
                             <div>
                                 <span class="bg-emerald-500/10 text-emerald-500 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${labelText}</span>
-                                <h3 class="font-bold text-slate-900 dark:text-slate-100 mt-3 mb-1.5 leading-snug">${gig.workType || 'কাজের বিবরণী'}</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-400"></i> ${providerText}: ${gig.adminName || 'Admin'}</p>
+                                <h3 class="font-bold text-slate-900 dark:text-slate-100 mt-3 mb-1.5 leading-snug text-sm">${gig.workType || 'কাজের বিবরণী'}</h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-1.5"><i class="fa-solid fa-user text-slate-400"></i> ${providerText}: ${gig.adminName || 'Admin'}</p>
                             </div>
-                            <div class="flex flex-col gap-2 pt-4 border-t border-slate-50 dark:border-slate-700 text-xs">
-                                <a href="tel:${gig.contactNo}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2.5 py-1 transition">
-                                    <span class="w-6 h-6 rounded bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xs"><i class="fa-solid fa-phone"></i></span> ${callText}: ${gig.contactNo || 'N/A'}
+                            <div class="flex flex-col gap-1.5 pt-3 border-t border-slate-50 dark:border-slate-800 text-[11px]">
+                                <a href="tel:${gig.contactNo}" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2 py-0.5 transition">
+                                    <span class="w-5 h-5 rounded bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-phone"></i></span> ${callText}: ${gig.contactNo || 'N/A'}
                                 </a>
-                                <a href="https://t.me/${gig.telegram}" target="_blank" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2.5 py-1 transition">
-                                    <span class="w-6 h-6 rounded bg-sky-50 text-sky-600 flex items-center justify-center text-xs"><i class="fa-brands fa-telegram"></i></span> ${telegramText}: @${gig.telegram || ''}
+                                <a href="https://t.me/${gig.telegram}" target="_blank" class="text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 flex items-center gap-2 py-0.5 transition">
+                                    <span class="w-5 h-5 rounded bg-sky-50 text-sky-600 flex items-center justify-center text-[10px]"><i class="fa-brands fa-telegram"></i></span> ${telegramText}: @${gig.telegram || ''}
                                 </a>
                             </div>
                         </div>
@@ -1184,7 +1568,7 @@
             });
         }
 
-        // 4. Modal Handlers
+        // 4. Enroll Modal Handlers
         function openEnrollModal(courseId, courseName, coursePrice) {
             document.getElementById('enroll-course-id').value = courseId;
             document.getElementById('enroll-course-title').value = courseName;
@@ -1205,7 +1589,7 @@
             document.getElementById('enroll-form').reset();
         }
 
-        // 5. Submit Payment request
+        // 5. Submit Course Payment Request
         function submitEnrollment(e) {
             e.preventDefault();
 
@@ -1240,6 +1624,183 @@
                 });
         }
 
+        // 6. Submit Free Seminar Registration Request
+        function submitSeminarRegistration(e) {
+            e.preventDefault();
+
+            const seminarData = {
+                seminarName: (globalSettings && globalSettings.seminarName) ? globalSettings.seminarName : "স্পেশাল ফ্রি সেমিনার",
+                name: document.getElementById('seminar-user-name').value,
+                gender: document.getElementById('seminar-user-gender').value,
+                age: document.getElementById('seminar-user-age').value,
+                whatsapp: document.getElementById('seminar-user-whatsapp').value,
+                selectedDay: document.getElementById('seminar-user-day').value,
+                selectedTime: currentLang === 'bn' ? "রাত ৯:৩০" : "9:30 PM", 
+                status: "pending",
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            database.ref('seminars/pending').push(seminarData)
+                .then(() => {
+                    const successMsg = currentLang === 'bn' 
+                        ? 'ফ্রি সেমিনারের জন্য আপনার আবেদনটি সফলভাবে জমা হয়েছে। অ্যাডমিন শীঘ্রই আপনার আবেদনটি যাচাই করবেন। ধন্যবাদ!' 
+                        : 'Your free seminar registration has been successfully submitted. Admin will verify it soon. Thank you!';
+                    alert(successMsg);
+                    closeSeminarRegModal();
+                })
+                .catch((error) => {
+                    console.error("error: ", error);
+                    const errorMsg = currentLang === 'bn' ? 'দুঃখিত, কোনো একটি কারিগরি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।' : 'Sorry, a technical error occurred. Please try again.';
+                    alert(errorMsg);
+                });
+        }
+
+        // Helper Phone Standardizer for robust matching
+        function standardizePhoneNumber(phone) {
+            let clean = String(phone).replace(/[^0-9]/g, '');
+            // Strip leading country codes (880 / 88) or leading zero (0)
+            if (clean.startsWith('880')) {
+                clean = clean.substring(3);
+            } else if (clean.startsWith('88')) {
+                clean = clean.substring(2);
+            } else if (clean.startsWith('0')) {
+                clean = clean.substring(1);
+            }
+            return clean;
+        }
+
+        // 7. Status Verification Tracker Realtime Search System
+        function searchRegistrationStatus() {
+            const searchPhone = document.getElementById('status-search-phone').value.trim();
+            const resultsContainer = document.getElementById('status-results-container');
+            
+            if (!searchPhone) {
+                alert(currentLang === 'bn' ? 'অনুগ্রহ করে আপনার সঠিক হোয়াটসঅ্যাপ নম্বর দিন।' : 'Please enter a valid WhatsApp number.');
+                return;
+            }
+
+            resultsContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-8 space-y-2">
+                    <div class="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span class="text-xs text-slate-400">${currentLang === 'bn' ? 'অনুসন্ধান করা হচ্ছে...' : 'Searching...'}</span>
+                </div>
+            `;
+
+            // Querying both Course Enrollments and Seminar Registrations in parallel
+            const p1 = database.ref('enrollments').once('value');
+            const p2 = database.ref('seminars').once('value');
+
+            Promise.all([p1, p2]).then(([snapEnrollments, snapSeminars]) => {
+                const enrollmentsData = snapEnrollments.val() || {};
+                const seminarsData = snapSeminars.val() || {};
+
+                const combinedData = {
+                    enrollments: enrollmentsData,
+                    seminars: seminarsData
+                };
+
+                const results = findRegistrationsByPhone(combinedData, searchPhone);
+                resultsContainer.innerHTML = '';
+
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="text-center py-8 space-y-1">
+                            <i class="fa-solid fa-triangle-exclamation text-slate-300 text-2xl"></i>
+                            <p class="text-slate-400 text-xs">${currentLang === 'bn' ? 'এই নম্বর দিয়ে কোনো আবেদন খুঁজে পাওয়া যায়নি।' : 'No records found for this number.'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                results.forEach(res => {
+                    let statusBadge = '';
+                    let statusClass = '';
+                    
+                    if (res.status === 'approved' || res.status === 'verified') {
+                        statusBadge = currentLang === 'bn' ? 'অনুমোদিত' : 'Approved';
+                        statusClass = 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-500/20';
+                    } else if (res.status === 'rejected') {
+                        statusBadge = currentLang === 'bn' ? 'বাতিল' : 'Rejected';
+                        statusClass = 'bg-rose-500/10 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400 border border-rose-500/20';
+                    } else {
+                        statusBadge = currentLang === 'bn' ? 'পেন্ডিং' : 'Pending';
+                        statusClass = 'bg-amber-500/10 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-500/20';
+                    }
+
+                    const typeBadge = res.type === 'course' 
+                        ? `<span class="bg-blue-500/10 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-500/20">${currentLang === 'bn' ? 'কোর্স' : 'Course'}</span>`
+                        : `<span class="bg-teal-500/10 text-teal-600 text-[10px] font-bold px-2 py-0.5 rounded border border-teal-500/20">${currentLang === 'bn' ? 'সেমিনার' : 'Seminar'}</span>`;
+
+                    const timestampVal = typeof res.timestamp === 'number' ? res.timestamp : Date.now();
+
+                    const cardHTML = `
+                        <div class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 space-y-2.5 text-left">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        ${typeBadge}
+                                        <span class="font-extrabold text-xs text-slate-800 dark:text-slate-200">${res.title}</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">${currentLang === 'bn' ? 'আবেদনকারী:' : 'Applicant:'} ${res.name}</p>
+                                </div>
+                                <span class="text-[10px] font-black px-2.5 py-1 rounded-full ${statusClass}">${statusBadge}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400 dark:text-slate-500 flex justify-between items-center border-t border-dashed border-slate-200 dark:border-slate-800 pt-2 font-medium">
+                                <span>${res.details}</span>
+                                <span>${new Date(timestampVal).toLocaleDateString(currentLang === 'bn' ? 'bn-BD' : 'en-US')}</span>
+                            </div>
+                        </div>
+                    `;
+                    resultsContainer.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            }).catch(err => {
+                console.error("Error searching status: ", err);
+                resultsContainer.innerHTML = `<p class="text-center text-rose-500 text-xs py-8">${currentLang === 'bn' ? 'তথ্য লোড করতে ত্রুটি ঘটেছে।' : 'Failed to retrieve application status.'}</p>`;
+            });
+        }
+
+        // Recursive Helper function with robust standardized matching
+        function findRegistrationsByPhone(data, searchPhone) {
+            let results = [];
+            const cleanSearch = searchPhone.replace(/[\s\-\+]/g, '');
+            if (!cleanSearch) return results;
+
+            const searchPhoneNormalized = standardizePhoneNumber(cleanSearch);
+
+            function searchNode(node, currentPath = '') {
+                if (!node || typeof node !== 'object') return;
+                
+                if (node.whatsapp) {
+                    const nodePhoneNormalized = standardizePhoneNumber(node.whatsapp);
+                    if (nodePhoneNormalized === searchPhoneNormalized || nodePhoneNormalized.includes(searchPhoneNormalized) || searchPhoneNormalized.includes(nodePhoneNormalized)) {
+                        let status = node.status || 'pending';
+                        
+                        if (currentPath.includes('/approved') || currentPath.includes('/verified')) status = 'verified';
+                        if (currentPath.includes('/rejected')) status = 'rejected';
+
+                        results.push({
+                            type: node.courseName ? 'course' : 'seminar',
+                            name: node.name || 'N/A',
+                            title: node.courseName || node.seminarName || (currentLang === 'bn' ? 'ফ্রি সেমিনার' : 'Free Seminar'),
+                            status: status,
+                            details: node.courseName 
+                                ? `${currentLang === 'bn' ? 'পেমেন্ট মাধ্যম:' : 'Payment Method:'} ${node.paymentMethod || 'N/A'}` 
+                                : `${currentLang === 'bn' ? 'দিন:' : 'Day:'} ${node.selectedDay || 'N/A'}, ${currentLang === 'bn' ? 'সময়: রাত ৯:৩০' : 'Time: 9:30 PM'}`,
+                            timestamp: node.timestamp || Date.now()
+                        });
+                        return;
+                    }
+                }
+                
+                for (let key in node) {
+                    searchNode(node[key], currentPath + '/' + key);
+                }
+            }
+            
+            searchNode(data);
+            return results;
+        }
+
         // ==============================
         // LIVE TALK BOT SYSTEM
         // ==============================
@@ -1262,7 +1823,7 @@
 
                 const data = snapshot.val();
                 if (!data) {
-                    const noHelpText = currentLang === 'bn' ? 'কোনো সাহায্যকারী প্রশ্ন সেট করা নেই।' : 'No FAQ questions loaded.';
+                    const noHelpText = i18n[currentLang].no_questions;
                     container.innerHTML = `<span class="text-xs text-slate-400 italic">${noHelpText}</span>`;
                     return;
                 }
@@ -1271,7 +1832,7 @@
                     const item = data[key];
                     if (!item) continue; 
                     const btn = document.createElement('button');
-                    btn.className = "flex-shrink-0 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 text-xs px-3.5 py-2 rounded-full border border-emerald-500/20 transition duration-150 font-bold whitespace-nowrap dark:bg-slate-700 dark:text-emerald-200 dark:border-slate-600";
+                    btn.className = "flex-shrink-0 bg-orange-500/10 hover:bg-orange-500/20 text-orange-600 text-xs px-3.5 py-2 rounded-full border border-orange-500/20 transition duration-150 font-bold whitespace-nowrap dark:bg-slate-700 dark:text-orange-200 dark:border-slate-600";
                     btn.innerText = item.question;
                     btn.onclick = () => selectQuestion(item.question, item.answer);
                     container.appendChild(btn);
@@ -1288,7 +1849,7 @@
 
             const userBubble = `
                 <div class="flex items-start justify-end space-x-2">
-                    <div class="bg-emerald-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-sm leading-relaxed font-bold">
+                    <div class="bg-orange-500 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-sm leading-relaxed font-bold">
                         ${question}
                     </div>
                 </div>

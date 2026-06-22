@@ -220,7 +220,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative overflow-hidden">
             <div class="flex items-center space-x-2 md:space-x-3">
                 <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo" class="w-9 h-9 md:w-10 md:h-10 rounded-full object-cover ring-4 ring-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                <span id="site-name" class="text-lg md:text-xl font-black bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-sm" data-translate="loading">লোড হচ্ছে...</span>
+                <span id="site-name" class="text-lg md:text-xl font-black bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent drop-shadow-sm">লোড হচ্ছে...</span>
             </div>
             <div class="flex items-center space-x-2">
                 <!-- Search Icon Button -->
@@ -283,7 +283,7 @@
         <main class="max-w-7xl mx-auto px-4 py-12 w-full">
             <div class="mb-16">
                 <h2 class="text-xl md:text-2xl font-bold mb-8 text-slate-900 border-b pb-3 flex items-center gap-3">
-                    <span class="p-2 bg-amber-500/10 rounded-lg text-amber-500"><i class="fa-solid fa-fire animate-pulse"></i></span> 
+                    <span class="p-2 bg-purple-500/10 rounded-lg text-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.2)]"><i class="fa-solid fa-fire animate-pulse"></i></span> 
                     <span data-translate="trending_courses">জনপ্রিয় ট্রেন্ডিং কোর্সসমূহ</span>
                 </h2>
                 <div id="trending-courses-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -1400,6 +1400,15 @@
                         document.getElementById('site-logo').src = data.logoUrl;
                     }
 
+                    // ফ্রি সেমিনারের প্রমো ইমেজ ডাইনামিকলি সেট করার কোড
+                    const promoImg = document.getElementById('promo-seminar-img');
+                    if (promoImg) {
+                        const dbSeminarImg = data.seminarBannerUrl || data.seminarImageUrl || data.seminarCoverUrl || data.promoImageUrl;
+                        if (dbSeminarImg) {
+                            promoImg.src = dbSeminarImg;
+                        }
+                    }
+
                     document.getElementById('admin-bkash').innerText = data.bkash || "N/A";
                     document.getElementById('admin-nagad').innerText = data.nagad || "N/A";
                     document.getElementById('admin-rocket').innerText = data.rocket || "N/A";
@@ -1483,7 +1492,7 @@
                             </div>
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div class="space-y-3">
-                                    ${isTrending ? `<div class="flex"><span class="bg-amber-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm"><i class="fa-solid fa-fire animate-pulse text-xs"></i> ${currentLang === 'bn' ? 'ট্রেন্ডিং' : 'Trending'}</span></div>` : ''}
+                                    ${isTrending ? `<div class="flex"><span class="bg-purple-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm"><i class="fa-solid fa-fire animate-pulse text-xs"></i> ${currentLang === 'bn' ? 'ট্রেন্ডিং' : 'Trending'}</span></div>` : ''}
                                     
                                     <h3 class="font-bold text-base md:text-lg text-slate-900 dark:text-slate-100 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">${course.name || ''}</h3>
                                     
